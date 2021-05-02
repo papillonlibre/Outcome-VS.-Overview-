@@ -9,9 +9,10 @@
     }
     .axis path,
     .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
+      fill: none; /*The axis filler*/
+      fill-rule: nonzero;
+      stroke: #000; /*The stroke is the shadow of the line.*/
+      /*shape-rendering: crispEdges;*/
     }
     .container {
       padding: 20px; 
@@ -37,7 +38,7 @@
     }
     .model-li {
     	text-align: center;
-        padding: 10px; /*the gap between model border and model image*/
+        padding: 15px; /*the gap between model border and model image*/
         border-radius: 50px;
         border-color: #c6d6e6;
         border-style: solid;
@@ -46,7 +47,8 @@
     .confusion-matrix-table td {
         text-align: center;
         font: 12px sans-serif;
-        border: 0.5px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+        border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+        width: 120px;
     }
 
     .confusion-matrix-table td.innerMatrix {
