@@ -2,7 +2,8 @@
 <meta charset="utf-8">
 
 <head>
-	<h1><center>Welcome to Model Selection</center></h1>
+	<h1><center>Welcome to Model Selection (Overview First)</center></h1>
+        
     <style>
     .axis {
       font: 8px sans-serif; /*the font of the axis*/
@@ -17,7 +18,7 @@
     .container {
       padding: 20px; 
       display: grid;
-      grid-gap: 10px; /*the distance between graph and models*/
+      grid-gap: 20px; /*the distance between graph and models*/
       grid-template-columns: 25%; /*the length for the left bars*/
     }
     .dataset-container {
@@ -34,7 +35,7 @@
     }
     .model-confusion-matrix {
     	text-align: center;
-        padding: 5px;
+        padding: 10px; /*The distance between model image and confusion matrix*/
     }
     .model-li {
     	text-align: center;
@@ -74,11 +75,49 @@
     path {
         pointer-events: all;
     }
-
+	
+	h1 {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
     </style>
 </head>
 
+<style>
+        head {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #body {
+            width: 1000px;
+            float: center;
+            padding: 10px;
+        }
+
+        #footer {
+            background-color: black;
+            color: white;
+            clear: both;
+            text-align: center;
+            padding: 15px;
+        }
+</style>
+    
 <body>
+	<div><center>
+	<h2>Please select the Model Selection Methods below</h2>
+    <select name="select">
+		<option value="overview">Overview First</option>
+		<option value="outcome" selected>Outcome First</option>
+		<option value="stage">Stage First</option>
+	</select>
+	</center></div>
+	
     <div class='container'>
         <div class='dataset-container'>
             <div class='svg-container' id='dataset-svg'>
