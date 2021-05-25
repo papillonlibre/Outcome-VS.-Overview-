@@ -294,11 +294,11 @@
                         		return 'brown'; 
                         	}
                         	// FALSE POSITIVE
-                        	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1) {
+                        	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1 && modelPredictions[d.id] != 1) {
                         		return 'orange'; 
                         	}
                         	// FALSE NEGATIVE
-                        	if (selectionArrayFN.includes(""+d.id) && modelPredictions[d.id] != 1) {
+                        	if (selectionArrayFN.includes(""+d.id) && modelPredictions[d.id] != 1 && groundTruth[d.id] == 1) {
                         		return 'purple'; 
                         	}
                         	return 'none';
