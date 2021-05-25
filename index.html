@@ -6,7 +6,7 @@
         
     <style>
     .axis {
-      font: 8px sans-serif; /*the font of the axis*/
+      font: 10px sans-serif; /*the font of the axis*/
     }
     .axis path,
     .axis line {
@@ -53,6 +53,7 @@
     }
 
     .confusion-matrix-table td.innerMatrix {
+    	color: black;
     	text-align: center;
         font-weight: 700;
     }
@@ -169,9 +170,10 @@
         // Defining size variables for the SVGs
         var margin = {top: 20, right: 10, bottom: 0, left: 0},
             width = 306 - margin.left - margin.right,
-            height = 200 - margin.top - margin.bottom,
-            miniWidth = 153 - margin.left - margin.right,
-            miniHeight = 100 - margin.top - margin.bottom;
+            height = 300 - margin.top - margin.bottom,
+            //edit the 10 axises in the small model grids
+            miniWidth = 253 - margin.left - margin.right,
+            miniHeight = 200 - margin.top - margin.bottom;
 
         // Choose the initial dimensions that we are rendering
         var possibleDimensions = Object.keys(happinessData[Object.keys(happinessData)[0]])
@@ -199,6 +201,11 @@
         var div = d3.select("body").append("div")   
             .attr("class", "tooltip")               
             .style("opacity", 0);
+        
+        var selectionArrayTP = [];
+        var selectionArrayTN = [];
+        var selectionArrayFP = [];
+        var selectionArrayFN = [];
 
         initializeProjections()
         initializeDimensions()
@@ -276,10 +283,41 @@
                                 return "circle"; // specifiying circle for negatives
                             } 
                         }))
-                        .attr('fill', 'none')
+                        .attr('fill', function(d) {
+                        	// TRUE POSITIVE
+                        	if (selectionArrayTP.includes(""+d.id) && groundTruth[d.id] == 1) {
+                        		//console.log(d.id);
+                        		return 'green';
+                        	}
+                        	// TRUE NEGATIVE
+                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] == 1) {
+                        		return 'brown'; 
+                        	}
+                        	// FALSE POSITIVE
+                        	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1) {
+                        		return 'orange'; 
+                        	}
+                        	// FALSE NEGATIVE
+                        	if (selectionArrayFN.includes(""+d.id) && modelPredictions[d.id] != 1) {
+                        		return 'purple'; 
+                        	}
+                        	return 'none';
+                        })
+//                         .classed('groundtruth', function(d) {
+//                         	if (groundTruth[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
+//                         .classed('predicted', function(d) {
+//                         	if (modelPredictions[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
                         .attr('stroke', function(d) {
                             if (groundTruth[d.id] == null || modelPredictions[d.id] == null) {
-                                return "red"; // this will make sure the graph on the top left is black
+                                return "grey"; // this will make sure the graph on the top left is black
                             }
                             else if (groundTruth[d.id] == modelPredictions[d.id]){
                                 return "blue"; // data point green if model got that data point correct
@@ -315,7 +353,7 @@
 
         }
         /* END SCATTERPLOT CODE */
-
+		
         /* BEGIN CONFUSION MATRIX CODE */
         function buildConfusionMatrix(containerElement, groundTruth, modelPredictions) {
             // Code below makes the confusion matrix
@@ -323,10 +361,11 @@
                             .attr('class', 'confusion-matrix-table')
 
             // Creating the other cells of the table
-            table.append('tr').html('<td/><td/><td>ground</td><td>truth</td>')
-            table.append('tr').html('<td/><td/><td>T</td><td>N</td>')
-            predictedTrueRow = table.append('tr').html('<td>Predicted</td><td>T</td>')
-            predictedFalseRow = table.append('tr').html('<td></td><td>N</td>')
+            // Edit the structure of the confusion matrix
+            table.append('tr').html('<br><td><tr>Ground Truth</tr>')
+            table.append('tr').html('<br><td><td>T</td><td>F</td>')
+            predictedTrueRow = table.append('tr').html('<tr>Predicted<br><td>T</td>')
+            predictedFalseRow = table.append('tr').html('<br></td><td>F</td>')
 
            // Here, filling in the values.  This is also where you can style the confusion matrix.
             var truePositives = 0;
@@ -339,7 +378,7 @@
             for (key in groundTruth) {
                 if (groundTruth[key] == 1) { // comparing with model predictions
                     if (groundTruth[key] == modelPredictions[key]) {
-                        truePositives += 1; 
+                        truePositives += 1;
                     }
                     else {
                         falseNegatives += 1; 
@@ -353,24 +392,114 @@
                         falsePositives += 1; 
                     }
                 }
-
             }
-
+                
             predictedTrueRow.append('td')
                             .attr('class', 'innerMatrix')
                             .text(truePositives)
-
+                            // color the NUMBER to green if click that specific number
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "green");
+          						selectionArrayTP = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] == modelPredictions[key]) {
+          			                        selectionArrayTP.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);
+//                                 d3.selectAll('.groundtruth')
+//                                   .filter('.predicted')
+//                                   //.selectAll('predicted')
+//                                   	.attr('fill', function(d) {
+//                                   		console.log(d);
+//                                   		return 'green';
+//                                   	});
+//         						}
+                              }
+                            )
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayTP = [];
+                        	})
+            
+                                      
+//             svg = d3.select(containerElement)
+//                 .append('svg')
+//                 .data(data) 
+//                     .enter().append("path") // using an SVG path
+//                         .attr("d", d3.svg.symbol().type(function(d) {
+//                         	if (!truePositives) {
+//                                 return "grey"; // specifiying cross for positives
+//                             }
+//                         }
+                            
             predictedTrueRow.append('td')
                             .attr('class', 'innerMatrix')
                             .text(falsePositives)
-
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "orange");
+          						selectionArrayFP = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] == modelPredictions[key]) {
+          			                        selectionArrayFP.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);})
+            				// mouseover and mouseout for the matrix number and check whether it is clickable               
+//                             .on("mouseover", function(){
+//           						d3.select(this)
+//             						.style("color", "orange");
+//           						})
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayFP = [];
+                        	})
+                            
             predictedFalseRow.append('td')
                             .attr('class', 'innerMatrix')
                             .text(falseNegatives)
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "purple");
+          						selectionArrayFN = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] != modelPredictions[key]) {
+          			                        selectionArrayFN.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);})
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayFN = [];
+                        	})
 
             predictedFalseRow.append('td')
                             .attr('class', 'innerMatrix')
                             .text(trueNegatives)
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "red");
+          						selectionArrayTN = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] != modelPredictions[key]) {
+          			                        selectionArrayTN.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);})
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayTN = [];
+                        	})
         }
         /* END CONFUSION MATRIX CODE */
 
@@ -441,10 +570,10 @@
 
         function calculateScales(scatterplotData) {
             if (currProjectionOption === 'axis_aligned') {
-                xScale.domain([-0.5, 5.5])
-                yScale.domain([-0.5, 5.5])
-                miniXScale.domain([-0.5, 5.5])
-                miniYScale.domain([-0.5, 5.5])                
+                xScale.domain([-0.5, 6.0])
+                yScale.domain([-0.5, 6.0])
+                miniXScale.domain([-0.5, 6.0])
+                miniYScale.domain([-0.5, 6.0])                
             } else {
                 xScale.domain(d3.extent(scatterplotData, (d) => d['x']))
                 yScale.domain(d3.extent(scatterplotData, (d) => d['y']))
