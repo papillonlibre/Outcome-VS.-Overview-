@@ -290,7 +290,7 @@
                         		return 'green';
                         	}
                         	// TRUE NEGATIVE
-                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] == 1) {
+                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] != 1 && groundTruth[d.id] != 1) {
                         		return 'brown'; 
                         	}
                         	// FALSE POSITIVE
@@ -444,7 +444,7 @@
             						.style("color", "orange");
           						selectionArrayFP = [];
           						for (key in groundTruth) {
-          			                if (groundTruth[key] == modelPredictions[key]) {
+          			                if (groundTruth[key] != modelPredictions[key]) {
           			                        selectionArrayFP.push(key);
           			                }
           			            }
@@ -489,7 +489,7 @@
             						.style("color", "red");
           						selectionArrayTN = [];
           						for (key in groundTruth) {
-          			                if (groundTruth[key] != modelPredictions[key]) {
+          			                if (groundTruth[key] == modelPredictions[key]) {
           			                        selectionArrayTN.push(key);
           			                }
           			            }
