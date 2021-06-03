@@ -290,15 +290,15 @@
                         		return 'green';
                         	}
                         	// TRUE NEGATIVE
-                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] != 1 && groundTruth[d.id] != 1) {
+                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] != 1) {
                         		return 'brown'; 
                         	}
                         	// FALSE POSITIVE
                         	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1) {
                         		return 'orange'; 
                         	}
-                        	// FALSE NEGATIVE
-                        	if (selectionArrayFN.includes(""+d.id) && modelPredictions[d.id] != 1 && groundTruth[d.id] == 1) {
+                        	// FALSE NEGATIVE(delete && groundTruth[d.id] == 1)
+                        	if (selectionArrayFN.includes(""+d.id) && groundTruth[d.id] == 1) {
                         		return 'purple'; 
                         	}
                         	return 'none';
@@ -407,16 +407,7 @@
           			                        selectionArrayTP.push(key);
           			                }
           			            }
-          						//console.log(selectionArray);
           			              redrawScatterplots(modelContainers);
-//                                 d3.selectAll('.groundtruth')
-//                                   .filter('.predicted')
-//                                   //.selectAll('predicted')
-//                                   	.attr('fill', function(d) {
-//                                   		console.log(d);
-//                                   		return 'green';
-//                                   	});
-//         						}
                               }
                             )
           		 			.on("mouseout", function() {       
@@ -442,6 +433,7 @@
                             .on("mouseover", function(){
           						d3.select(this)
             						.style("color", "orange");
+          						//d3.select(falsePositives).style("color", "orange");
           						selectionArrayFP = [];
           						for (key in groundTruth) {
           			                if (groundTruth[key] != modelPredictions[key]) {
@@ -450,11 +442,6 @@
           			            }
           						//console.log(selectionArray);
           			              redrawScatterplots(modelContainers);})
-            				// mouseover and mouseout for the matrix number and check whether it is clickable               
-//                             .on("mouseover", function(){
-//           						d3.select(this)
-//             						.style("color", "orange");
-//           						})
           		 			.on("mouseout", function() {       
                      			d3.select(this)        
                           			.style("color", "black");
@@ -485,16 +472,19 @@
                             .attr('class', 'innerMatrix')
                             .text(trueNegatives)
                             .on("mouseover", function(){
-          						d3.select(this)
-            						.style("color", "red");
+      						d3.select(this)
+        						.style("color", "red")
           						selectionArrayTN = [];
           						for (key in groundTruth) {
           			                if (groundTruth[key] == modelPredictions[key]) {
           			                        selectionArrayTN.push(key);
           			                }
           			            }
-          						//console.log(selectionArray);
-          			              redrawScatterplots(modelContainers);})
+          						console.log(selectionArrayTN);
+          			            redrawScatterplots(modelContainers);
+          			        d3.select(trueNegatives)
+          			             .style("color", "red")
+          			        })
           		 			.on("mouseout", function() {       
                      			d3.select(this)        
                           			.style("color", "black");
