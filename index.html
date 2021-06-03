@@ -290,7 +290,7 @@
                         		return 'green';
                         	}
                         	// TRUE NEGATIVE
-                        	if (selectionArrayTN.includes(""+d.id) && modelPredictions[d.id] != 1) {
+                        	if (selectionArrayTN.includes(""+d.id) && groundTruth[d.id] != 1) {
                         		return 'brown'; 
                         	}
                         	// FALSE POSITIVE
