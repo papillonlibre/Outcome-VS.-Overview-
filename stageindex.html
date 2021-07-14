@@ -25,11 +25,12 @@
         grid-column: 1 / 1;
     }
     .models-container {
-        grid-column: 2 / 2;
+        grid-column: 2/2;
     }
     .models-container ul {
-        display: grid;
+        display: inline-grid;
         grid-gap: 20px;
+        grid-template-rows: 25% 25% 25%;
         grid-template-columns: 30% 30% 30%; /*each represent one column*/
         list-style-type: none;        
     }
@@ -135,11 +136,6 @@
                 </p>
             </div>
             <div class='data-control-container' id='projection-select'>
-            </div>
-            <div class='dataset-description-container'>
-                <p>The City of Somerville sends out <a href='https://data.somervillema.gov/Happiness/Somerville-Happiness-Survey-responses-2011-2013-20/w898-3dfm'>a happiness survey</a> to a random sample of Somerville residents asking them to rate their personal happiness and their satisfaction with City services. This combined dataset includes the survey responses from 2011, 2013, and 2015.</p>
-
-                <p> The dataset for this lab is a <a href='https://archive.ics.uci.edu/ml/datasets/Somerville+Happiness+Survey'>subset of the happiness survey</a> with six features, "the availability of info about city services," "cost of housing," "quality of public schools," "trust in local police," "maintenance of streets and sidewalks", and "availability of social and community events".  Each feature is rated from 1 to 5, and each data point is labeled with 1 (happy) or 0 (unhappy). 
             </div>
         </div>
         <div class='models-container'>
@@ -302,18 +298,6 @@
                         	}
                         	return 'none';
                         })
-//                         .classed('groundtruth', function(d) {
-//                         	if (groundTruth[d.id] == 1) {
-//                         		return true;
-//                         	}
-//                         	return false;
-//                         })
-//                         .classed('predicted', function(d) {
-//                         	if (modelPredictions[d.id] == 1) {
-//                         		return true;
-//                         	}
-//                         	return false;
-//                         })
                         .attr('stroke', function(d) {
                             if (groundTruth[d.id] == null || modelPredictions[d.id] == null) {
                                 return "grey"; // this will make sure the graph on the top left is black
