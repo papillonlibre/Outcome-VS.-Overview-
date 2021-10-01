@@ -586,11 +586,14 @@
                     .append('li')
 	                .on("click", function(){
 	  						d3.select(this)
-	    						.style("color", "brown")
+	    						//.style("color", "brown")
+                                d3.select(this).style("border-color", "#00FF00")
+
 	      			        })
 			      	.on("mouseout", function() {       
 		                    d3.select(this)        
-		                         .style("color", "black");
+		                         //.style("color", "black");
+                                 d3.select(this).style("border-color", "#c6d6e6")
 		                     })
                     .attr('class', 'model-li')
                     .attr('id', (d) => d.replace(/ /g,"-"))
