@@ -23,6 +23,9 @@
     }
     .dataset-container {
         grid-column: 1 / 1;
+        position: fixed;
+        width: 30%;
+        left: 5%;
     }
     .models-container {
         grid-column: 2 / 2;
@@ -31,7 +34,8 @@
         display: grid;
         grid-gap: 20px;
         grid-template-columns: 30% 30% 30%; /*each represent one column*/
-        list-style-type: none;        
+        list-style-type: none;
+        
     }
     .model-confusion-matrix {
     	text-align: center;
@@ -122,17 +126,17 @@
        <!-- The places where we can add click on models -->
        <div class = 'container'>
             <div class='dataset-container'>
-                <div class='svg-container' id='dataset-svg'>
+                <div class='svg-container' id='dataset-svg' >
             </div>
-                <div class='data-control-container'>
+                <div class='data-control-container' >
                     <p>
                         X-axis: 
-                        <select name="x-axis" id="x-axis-select">
+                        <select name="x-axis" id="x-axis-select" >
                         </select>
                     </p>
                     <p>
                         Y-axis:
-                        <select name="y-axis" id="y-axis-select">
+                        <select name="y-axis" id="y-axis-select" >
                         </select>
                     </p>
                     </p>
@@ -142,11 +146,11 @@
                 <div class='data-control-container' id='projection-select'>
                 </div>
             </div>
-            <div class='models-container'>
+            <div class='models-container' >
                 <ul>
                 </ul>
             </div>
-        <!--</center> -->
+        </center>
         
         </div>
 
@@ -581,33 +585,35 @@
 
         function initializeModels() {
             // console.log("initializing models, there should be data ", Object.keys(predictionData))
-            //var counter = 0;
+            var counter = 0;
             var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        //counter++;
-                        if ( lightsOn == false){
-                            d3.select(this)
+                        counter++;
+                        
+                        if (lightsOn == false){
+                            //d3.select(this)
 	    						//.style("color", "brown")
+                                console.log("I have reached the if");
                                 d3.select(this).style("border-color", "#00008b")
                                 lightsOn = true;
+                                console.log("lightsOn == " + lightsOn);
                         }
-                        else {
-                            d3.select(this)        
+                        else{                                
 		                         //.style("color", "black");
-                                 if (d3.select(this).style("border-color", "#00008b") == true){
+                                 console.log("I have reached the else");
+                                 if (d3.select(this).style("border-color", "#00008b")){
                                     d3.select(this).style("border-color", "#c6d6e6")
                                     lightsOn = false;
-                                 }
-                                 
-
-                                    //LOGIC ERROR IS HERE
-
+                                    console.log("lightsOn == " + lightsOn);
+                                }
                                  
                         }
+                        
+
                     })
                         //old implementation
                         /*
