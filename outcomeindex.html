@@ -120,34 +120,35 @@
 	
 	
        <!-- The places where we can add click on models -->
-       <!-- 
-        <div class='dataset-container'>
-            <div class='svg-container' id='dataset-svg'>
-        </div> -->
-            <div class='data-control-container'>
-                <p>
-                    X-axis: 
-                    <select name="x-axis" id="x-axis-select">
-                    </select>
-                </p>
-                <p>
-                    Y-axis:
-                    <select name="y-axis" id="y-axis-select">
-                    </select>
-                </p>
-                </p>
-                <p> Dimensionality Reduction Techniques for Data Visualization:
-                </p>
+       <div class = 'container'>
+            <div class='dataset-container'>
+                <div class='svg-container' id='dataset-svg'>
             </div>
-            <div class='data-control-container' id='projection-select'>
+                <div class='data-control-container'>
+                    <p>
+                        X-axis: 
+                        <select name="x-axis" id="x-axis-select">
+                        </select>
+                    </p>
+                    <p>
+                        Y-axis:
+                        <select name="y-axis" id="y-axis-select">
+                        </select>
+                    </p>
+                    </p>
+                    <p> Dimensionality Reduction Techniques for Data Visualization:
+                    </p>
+                </div>
+                <div class='data-control-container' id='projection-select'>
+                </div>
             </div>
+            <div class='models-container'>
+                <ul>
+                </ul>
+            </div>
+        <!--</center> -->
+        
         </div>
-        <div class='models-container'>
-            <ul>
-            </ul>
-        </div>
-    </center>
-    </div>
 
 
     <script src="./d3.min.js"></script>
@@ -580,21 +581,48 @@
 
         function initializeModels() {
             // console.log("initializing models, there should be data ", Object.keys(predictionData))
+            //var counter = 0;
+            var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-	  						d3.select(this)
+                        //counter++;
+                        if ( lightsOn == false){
+                            d3.select(this)
 	    						//.style("color", "brown")
                                 d3.select(this).style("border-color", "#00008b")
+                                lightsOn = true;
+                        }
+                        else {
+                            d3.select(this)        
+		                         //.style("color", "black");
+                                 if (d3.select(this).style("border-color", "#00008b") == true){
+                                    d3.select(this).style("border-color", "#c6d6e6")
+                                    lightsOn = false;
+                                 }
+                                 
 
-	      			        })
-			      	.on("mouseout", function() {       
+                                    //LOGIC ERROR IS HERE
+
+                                 
+                        }
+                    })
+                        //old implementation
+                        /*
+	  						.on("mouseout", function() {       
 		                    d3.select(this)        
 		                         //.style("color", "black");
                                  d3.select(this).style("border-color", "#c6d6e6")
 		                     })
+
+                             */
+
+
+                                // recreate each part of the visual model  separately and then recombine with in the right positions
+	      			     
+			      	
                     .attr('class', 'model-li')
                     .attr('id', (d) => d.replace(/ /g,"-"))
                     .html((d) => '<h2>' + d + '</h2>')
@@ -612,7 +640,7 @@
             // Different accessor functions based on if it's axis-aligned or not
             var projAccessor = function (k) {
                 var projData;
-                if (currProjectionOption === 'pca') {
+                if (currProjectionOption === 'apca') {
                     projData = pcaData;
                 } else if (currProjectionOption === 'mds') {
                     projData = mdsData;
