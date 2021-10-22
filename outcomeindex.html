@@ -586,48 +586,39 @@
 
         function initializeModels() {
             // console.log("initializing models, there should be data ", Object.keys(predictionData))
-            var counter = 0;
             var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        counter++;
-                        
+                        console.log("lightsOn == " + lightsOn);
                         if (lightsOn == false){
                             //d3.select(this)
 	    						//.style("color", "brown")
-                                console.log("I have reached the if");
-                                d3.select(this).style("border-color", "#00008b")
-                                lightsOn = true;
+                                console.log("I have reached the lightsOn == false case");
+                                if (d3.select(this).style("border-color", "#c6d6e6") ){
+                                    console.log("I have reached the inner if");
+                                    d3.select(this).style("border-color", "#00008b")
+                                    lightsOn = true;
+                                    updateData();
+                                }
+                                
                                 console.log("lightsOn == " + lightsOn);
                         }
                         else{                                
 		                         //.style("color", "black");
-                                 console.log("I have reached the else");
-                                 if (d3.select(this).style("border-color", "#00008b")){
+                                 console.log("I have reached the lightsOn == true case");
+                                 if (d3.select(this).style("border-color", "#00008b") ){
+                                     console.log("reached inner if statement");
                                     d3.select(this).style("border-color", "#c6d6e6")
                                     lightsOn = false;
-                                    console.log("lightsOn == " + lightsOn);
                                 }
+                                console.log("lightsOn == " + lightsOn);
                                  
                         }
-                        
 
                     })
-                        //old implementation
-                        /*
-	  						.on("mouseout", function() {       
-		                    d3.select(this)        
-		                         //.style("color", "black");
-                                 d3.select(this).style("border-color", "#c6d6e6")
-		                     })
-
-                             */
-
-
-                                // recreate each part of the visual model  separately and then recombine with in the right positions
 	      			     
 			      	
                     .attr('class', 'model-li')
@@ -640,6 +631,12 @@
             return Object.keys(predictionData)
         }
 
+        function updateData(){
+            console.log("update date");
+            redrawScatterplots(modelContainers);
+            
+
+        }
         function parseData(data) {
             // We need to add some random jitter because there are so few points
             epsilon = 0.4
