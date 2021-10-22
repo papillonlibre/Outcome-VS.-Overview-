@@ -596,25 +596,30 @@
                         if (lightsOn == false){
                             //d3.select(this)
 	    						//.style("color", "brown")
-                                console.log("I have reached the lightsOn == false case");
-                                if (d3.select(this).style("border-color", "#c6d6e6") ){
-                                    console.log("I have reached the inner if");
+                                var elementColor = d3.select(this).style("border-color");
+                                //console.log("elementColor: " + elementColor);
+                                //console.log("I have reached the lightsOn == false case");
+                                if (elementColor == 'rgb(198, 214, 230)') {
+                                    //console.log("I have reached the inner if");
                                     d3.select(this).style("border-color", "#00008b")
                                     lightsOn = true;
                                     updateData();
                                 }
                                 
-                                console.log("lightsOn == " + lightsOn);
+                                //console.log("lightsOn == " + lightsOn);
                         }
                         else{                                
 		                         //.style("color", "black");
-                                 console.log("I have reached the lightsOn == true case");
-                                 if (d3.select(this).style("border-color", "#00008b") ){
-                                     console.log("reached inner if statement");
+                                 //console.log("I have reached the lightsOn == true case");
+                                 
+                                 var elementColor2 = d3.select(this).style("border-color");
+                                 //console.log("elementColor: " + elementColor2);
+                                 if (elementColor2 == 'rgb(0, 0, 139)') {
+                                    //console.log("reached inner if statement");
                                     d3.select(this).style("border-color", "#c6d6e6")
                                     lightsOn = false;
                                 }
-                                console.log("lightsOn == " + lightsOn);
+                                //console.log("lightsOn == " + lightsOn);
                                  
                         }
 
@@ -633,7 +638,7 @@
 
         function updateData(){
             console.log("update date");
-            redrawScatterplots(modelContainers);
+            d3("data-control-container").redrawScatterplots(modelContainers);
             
 
         }
