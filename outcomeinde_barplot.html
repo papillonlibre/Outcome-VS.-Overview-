@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+	<h1><center>Welcome to Model Selection (Outcome First)</center></h1>
+        
+    <style>
+    .axis {
+      font: 10px sans-serif; /*the font of the axis*/
+    }
+    .axis path,
+    .axis line {
+      fill: none; /*The axis filler*/
+      fill-rule: nonzero;
+      stroke: #000; /*The stroke is the shadow of the line.*/
+      /*shape-rendering: crispEdges;*/
+    }
+    .container {
+      padding: 20px; 
+      display: grid;
+      grid-gap: 20px; /*the distance between graph and models*/
+      grid-template-columns: 25%; /*the length for the left bars*/
+    }
+    .dataset-container {
+        grid-column: 1 / 1;
+        position: fixed;
+        width: 30%;
+        left: 0;
+        bottom: 0;
+    }
+    .models-container {
+        grid-column: 2 / 2;
+    }
+    .models-container ul {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: 30% 30% 30%; /*each represent one column*/
+        list-style-type: none;
+        
+    }
+    .model-confusion-matrix {
+    	text-align: center;
+        padding: 10px; /*The distance between model image and confusion matrix*/
+    }
+    .model-li {
+    	text-align: center;
+        padding: 15px; /*the gap between model border and model image*/
+        border-radius: 50px;
+        border-color: #c6d6e6;
+        border-style: solid;
+        border-width: 10px; /*the width of the model's' border*/
+    }
+    .confusion-matrix-table td {
+        text-align: center;
+        font: 12px sans-serif;
+        border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+        width: 120px;
+    }
+
+    .confusion-matrix-table td.innerMatrix {
+    	color: black;
+    	text-align: center;
+        font-weight: 700;
+    }
+	
+	/*tooltip for mouse touching on the points*/
+    div.tooltip {   
+        position: absolute;         
+        text-align: left;
+        width: 120px;                    
+        height: 88px;                   
+        padding: 2px;            
+        padding-left: 15px;         
+        font: 12px sans-serif;      
+        background: lightsteelblue; 
+        border: 0px;        
+        border-radius: 8px;         
+        pointer-events: none;         
+    }
+
+    path {
+        pointer-events: all;
+    }
+	
+	h1 {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<style>
+        head {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #body {
+            width: 1000px;
+            float: center;
+            padding: 10px;
+        }
+
+        #footer {
+            background-color: black;
+            color: white;
+            clear: both;
+            text-align: center;
+            padding: 15px;
+        }
+</style>
+    
+<body>
+	<div>
+	<center>
+	<h2>Please select the Model Selection Methods below</h2>
+	<link rel="stylesheet" href="index.css">
+	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
+	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
+	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
+	
+	
+       <!-- The places where we can add click on models -->
+       <div class = 'container'>
+            <div class='dataset-container'>
+                <div class='svg-container' id='dataset-svg' >
+            </div>
+                <div class='data-control-container' >
+                    <p>
+                        X-axis: 
+                        <select name="x-axis" id="x-axis-select" >
+                        </select>
+                    </p>
+                    <p>
+                        Y-axis:
+                        <select name="y-axis" id="y-axis-select" >
+                        </select>
+                    </p>
+                    </p>
+                    <p> Dimensionality Reduction Techniques for Data Visualization:
+                    </p>
+                </div>
+                <div class='data-control-container' id='projection-select'>
+                </div>
+            </div>
+            <div class='models-container' >
+                <ul>
+                </ul>
+            </div>
+        </center>
+        
+        </div>
+
+
+    <script src="./d3.min.js"></script>
+    <script>
+        /* BEGIN LOADING DATA */
+        /* Loading the data into variables.  Usually, this would be pulled from an external source, or uploaded,
+        like in the previous lab.  But for portability, we just embed it right in the script tag */
+
+        var happinessData = JSON.parse('{"132":{"city_services":3,"housing_cost":4,"schools":4,"trust_police":5,"streets_sidewalks":1,"events":3},"53":{"city_services":5,"housing_cost":1,"schools":3,"trust_police":3,"streets_sidewalks":4,"events":4},"110":{"city_services":5,"housing_cost":2,"schools":2,"trust_police":4,"streets_sidewalks":5,"events":5},"89":{"city_services":4,"housing_cost":2,"schools":4,"trust_police":4,"streets_sidewalks":4,"events":4},"33":{"city_services":4,"housing_cost":1,"schools":3,"trust_police":4,"streets_sidewalks":4,"events":5},"68":{"city_services":4,"housing_cost":1,"schools":3,"trust_police":4,"streets_sidewalks":4,"events":4},"4":{"city_services":5,"housing_cost":4,"schools":3,"trust_police":3,"streets_sidewalks":3,"events":5},"131":{"city_services":5,"housing_cost":3,"schools":5,"trust_police":4,"streets_sidewalks":5,"events":5},"81":{"city_services":5,"housing_cost":2,"schools":5,"trust_police":5,"streets_sidewalks":5,"events":5},"26":{"city_services":3,"housing_cost":4,"schools":3,"trust_police":3,"streets_sidewalks":2,"events":3},"77":{"city_services":4,"housing_cost":5,"schools":5,"trust_police":5,"streets_sidewalks":1,"events":3},"123":{"city_services":5,"housing_cost":3,"schools":4,"trust_police":4,"streets_sidewalks":4,"events":4},"2":{"city_services":5,"housing_cost":3,"schools":3,"trust_police":3,"streets_sidewalks":3,"events":5},"103":{"city_services":5,"housing_cost":4,"schools":4,"trust_police":4,"streets_sidewalks":4,"events":5},"113":{"city_services":5,"housing_cost":3,"schools":4,"trust_police":3,"streets_sidewalks":4,"events":3},"92":{"city_services":5,"housing_cost":2,"schools":3,"trust_police":4,"streets_sidewalks":4,"events":5},"10":{"city_services":3,"housing_cost":2,"schools":3,"trust_police":3,"streets_sidewalks":2,"events":3},"27":{"city_services":3,"housing_cost":3,"schools":3,"trust_police":5,"streets_sidewalks":5,"events":5},"13":{"city_services":4,"housing_cost":2,"schools":4,"trust_police":5,"streets_sidewalks":4,"events":3},"121":{"city_services":4,"housing_cost":2,"schools":4,"trust_police":4,"streets_sidewalks":4,"events":4},"116":{"city_services":3,"housing_cost":2,"schools":2,"trust_police":3,"streets_sidewalks":3,"events":3},"130":{"city_services":5,"housing_cost":2,"schools":2,"trust_police":4,"streets_sidewalks":4,"events":5},"85":{"city_services":5,"housing_cost":3,"schools":3,"trust_police":3,"streets_sidewalks":2,"events":5},"44":{"city_services":4,"housing_cost":2,"schools":4,"trust_police":3,"streets_sidewalks":2,"events":4},"80":{"city_services":5,"housing_cost":3,"schools":3,"trust_police":4,"streets_sidewalks":3,"events":3},"114":{"city_services":5,"housing_cost":2,"schools":3,"trust_police":3,"streets_sidewalks":3,"events":5},"102":{"city_services":5,"housing_cost":4,"schools":4,"trust_police":3,"streets_sidewalks":3,"events":4},"23":{"city_services":4,"housing_cost":3,"schools":5,"trust_police":5,"streets_sidewalks":5,"events":4},"84":{"city_services":5,"housing_cost":2,"schools":3,"trust_police":5,"streets_sidewalks":5,"events":5},"133":{"city_services":5,"housing_cost":1,"schools":5,"trust_police":5,"streets_sidewalks":5,"events":5},"60":{"city_services":4,"housing_cost":4,"schools":4,"trust_police":4,"streets_sidewalks":3,"events":4},"63":{"city_services":4,"housing_cost":4,"schools":3,"trust_police":3,"streets_sidewalks":2,"events":5},"30":{"city_services":5,"housing_cost":3,"schools":3,"trust_police":3,"streets_sidewalks":5,"events":3},"7":{"city_services":5,"housing_cost":4,"schools":4,"trust_police":4,"streets_sidewalks":4,"events":5},"1":{"city_services":3,"housing_cost":2,"schools":3,"trust_police":5,"streets_sidewalks":4,"events":3},"142":{"city_services":5,"housing_cost":3,"schools":2,"trust_police":5,"streets_sidewalks":5,"events":5}}')
+
+        var predictionData = JSON.parse('{"ground_truth":{"132":1,"53":1,"110":1,"89":1,"33":0,"68":1,"4":0,"131":0,"81":1,"26":0,"77":0,"123":1,"2":1,"103":1,"113":1,"92":1,"10":0,"27":1,"13":0,"121":0,"116":0,"130":0,"85":0,"44":1,"80":0,"114":0,"102":1,"23":0,"84":1,"133":1,"60":0,"63":1,"30":1,"7":1,"1":0,"142":0},"Nearest Neighbors":{"132":0,"53":1,"110":1,"89":0,"33":0,"68":0,"4":0,"131":1,"81":1,"26":0,"77":0,"123":1,"2":0,"103":1,"113":0,"92":1,"10":0,"27":0,"13":0,"121":0,"116":1,"130":1,"85":1,"44":0,"80":0,"114":0,"102":1,"23":0,"84":1,"133":1,"60":1,"63":0,"30":0,"7":1,"1":0,"142":1},"Linear SVM":{"132":0,"53":1,"110":1,"89":1,"33":1,"68":1,"4":1,"131":1,"81":1,"26":0,"77":0,"123":1,"2":1,"103":1,"113":1,"92":1,"10":0,"27":1,"13":1,"121":1,"116":0,"130":1,"85":1,"44":1,"80":1,"114":1,"102":1,"23":1,"84":1,"133":1,"60":1,"63":1,"30":1,"7":1,"1":0,"142":1},"RBF SVM":{"132":0,"53":1,"110":1,"89":0,"33":1,"68":1,"4":0,"131":1,"81":1,"26":0,"77":0,"123":1,"2":0,"103":1,"113":0,"92":1,"10":0,"27":0,"13":0,"121":0,"116":0,"130":1,"85":0,"44":1,"80":1,"114":0,"102":0,"23":0,"84":1,"133":1,"60":1,"63":0,"30":0,"7":1,"1":0,"142":1},"Gaussian Process":{"132":0,"53":1,"110":1,"89":1,"33":1,"68":1,"4":1,"131":1,"81":1,"26":0,"77":0,"123":1,"2":1,"103":1,"113":1,"92":1,"10":0,"27":1,"13":1,"121":1,"116":0,"130":1,"85":1,"44":0,"80":1,"114":1,"102":1,"23":1,"84":1,"133":1,"60":1,"63":0,"30":1,"7":1,"1":0,"142":1},"Decision Tree":{"132":0,"53":1,"110":1,"89":0,"33":0,"68":0,"4":0,"131":1,"81":1,"26":0,"77":0,"123":1,"2":0,"103":1,"113":1,"92":1,"10":1,"27":0,"13":1,"121":0,"116":1,"130":1,"85":0,"44":0,"80":0,"114":0,"102":1,"23":0,"84":1,"133":1,"60":0,"63":0,"30":1,"7":1,"1":1,"142":1},"Random Forest":{"132":0,"53":1,"110":1,"89":1,"33":1,"68":1,"4":1,"131":1,"81":1,"26":0,"77":0,"123":1,"2":0,"103":1,"113":1,"92":1,"10":0,"27":0,"13":1,"121":1,"116":0,"130":1,"85":1,"44":1,"80":1,"114":1,"102":1,"23":0,"84":1,"133":1,"60":0,"63":0,"30":0,"7":1,"1":0,"142":1},"Neural Net":{"132":0,"53":1,"110":1,"89":1,"33":1,"68":0,"4":0,"131":1,"81":1,"26":0,"77":0,"123":1,"2":1,"103":1,"113":1,"92":1,"10":0,"27":0,"13":0,"121":1,"116":0,"130":1,"85":0,"44":1,"80":1,"114":1,"102":1,"23":1,"84":1,"133":1,"60":0,"63":0,"30":0,"7":1,"1":0,"142":1},"AdaBoost":{"132":0,"53":1,"110":1,"89":1,"33":0,"68":0,"4":0,"131":1,"81":1,"26":0,"77":1,"123":1,"2":1,"103":0,"113":0,"92":1,"10":0,"27":0,"13":0,"121":1,"116":0,"130":1,"85":1,"44":1,"80":0,"114":1,"102":1,"23":1,"84":1,"133":1,"60":0,"63":0,"30":0,"7":0,"1":0,"142":1},"Naive Bayes":{"132":0,"53":1,"110":1,"89":1,"33":1,"68":1,"4":1,"131":1,"81":1,"26":0,"77":0,"123":1,"2":1,"103":1,"113":1,"92":1,"10":0,"27":0,"13":1,"121":1,"116":0,"130":1,"85":1,"44":0,"80":0,"114":1,"102":1,"23":1,"84":1,"133":1,"60":1,"63":0,"30":1,"7":1,"1":0,"142":1},"QDA":{"132":0,"53":1,"110":0,"89":1,"33":1,"68":0,"4":0,"131":1,"81":1,"26":0,"77":0,"123":1,"2":0,"103":1,"113":1,"92":1,"10":0,"27":1,"13":0,"121":1,"116":0,"130":0,"85":0,"44":1,"80":1,"114":1,"102":1,"23":1,"84":1,"133":1,"60":0,"63":0,"30":1,"7":1,"1":0,"142":1}}')
+
+        var pcaData = JSON.parse('{"133": {"y": "-0.9589366310063013", "x": "-2.418023155353628"}, "132": {"y": "-0.7870050418349697", "x": "3.123241220702234"}, "131": {"y": "-1.6342485805218487", "x": "-1.2908644818356694"}, "130": {"y": "1.1208234740329177", "x": "-1.0985671075554697"}, "110": {"y": "0.9497895813015933", "x": "-1.8575780054832038"}, "113": {"y": "-0.1870398160267989", "x": "0.2852845431860981"}, "68": {"y": "1.2228767938679452", "x": "-0.9540532129075661"}, "80": {"y": "0.23718310889831798", "x": "0.81047368365095"}, "81": {"y": "-1.508994761547545", "x": "-1.9542054022375184"}, "84": {"y": "-0.15300807402607994", "x": "-2.022802582591802"}, "85": {"y": "0.6596440967605307", "x": "1.117094198878989"}, "26": {"y": "0.5695630323283188", "x": "2.7289780671688395"}, "27": {"y": "-0.4164663548943445", "x": "-1.062832264287387"}, "23": {"y": "-1.8290643590342732", "x": "-0.9163545915345392"}, "63": {"y": "0.25288589105577647", "x": "1.8289882345892516"}, "44": {"y": "0.7616974165955581", "x": "1.2616080935268927"}, "1": {"y": "0.47800288481427655", "x": "-0.11572556949032681"}, "2": {"y": "0.488610204029206", "x": "0.35808330095125557"}, "116": {"y": "2.176638744440215", "x": "1.0080330728317461"}, "4": {"y": "-0.061447926512038044", "x": "0.8219010540673645"}, "7": {"y": "-1.3352794745710357", "x": "-0.10233442096896832"}, "142": {"y": "-0.025072860806591452", "x": "-1.593283419652835"}, "60": {"y": "-0.9342570487851951", "x": "1.2307095345456365"}, "77": {"y": "-2.1583564409734364", "x": "3.373281281401333"}, "121": {"y": "-0.005174680434031763", "x": "-0.45593686961431557"}, "123": {"y": "-0.6985327358117656", "x": "-0.24019539909235976"}, "102": {"y": "-0.6527526620547445", "x": "1.1821564192372234"}, "103": {"y": "-1.3352794745710357", "x": "-0.1023344209689683"}, "92": {"y": "0.44283013027218515", "x": "-1.0642685173783277"}, "10": {"y": "1.669679293410807", "x": "1.801342560936622"}, "13": {"y": "-0.3432903837829459", "x": "-0.32950326190733825"}, "114": {"y": "1.0386683345704504", "x": "-0.10573445216485322"}, "33": {"y": "1.136188185649919", "x": "-1.2800099879002835"}, "30": {"y": "0.31991963500260895", "x": "-0.5080249449187781"}, "53": {"y": "1.5043811805983958", "x": "-1.0026063282159785"}, "89": {"y": "-0.005174680434031844", "x": "-0.4559368696143155"}}')
+
+        var mdsData = JSON.parse('{"133": {"y": "1.8205113920541092", "x": "2.6158956525908823"}, "132": {"y": "0.173203098852468", "x": "-3.828723870258225"}, "131": {"y": "2.283339961048586", "x": "0.7749217324494494"}, "130": {"y": "-0.8743287142170648", "x": "1.5195058639148977"}, "110": {"y": "-0.7953128640224284", "x": "2.2622200593275577"}, "113": {"y": "0.8824736303641322", "x": "-0.5889869698624508"}, "68": {"y": "-1.3665407872160868", "x": "1.1507633210217487"}, "80": {"y": "-0.12652346517164578", "x": "-0.8635225990611407"}, "81": {"y": "1.9616365441824466", "x": "1.9280434283432595"}, "84": {"y": "0.40906684928232645", "x": "2.1326284403199844"}, "85": {"y": "-0.8942352160277469", "x": "-1.6299809391795559"}, "26": {"y": "-1.4318988584742018", "x": "-2.7777618994608173"}, "27": {"y": "-0.118118557304703", "x": "2.6277856540446245"}, "23": {"y": "2.2235584872721486", "x": "1.161228511468416"}, "63": {"y": "-0.4847630290384198", "x": "-2.3481431353791007"}, "44": {"y": "-1.6186776762435757", "x": "-1.2414355596275788"}, "1": {"y": "-2.2736446584166314", "x": "1.088150521454026"}, "2": {"y": "-0.6056721833388629", "x": "-0.7906069655550104"}, "116": {"y": "-2.788210573302726", "x": "-0.49911730511560104"}, "4": {"y": "0.20285614186882345", "x": "-1.6438053885262545"}, "7": {"y": "1.7169508844515577", "x": "-0.5375955871943006"}, "142": {"y": "0.26585917657777214", "x": "2.575168963402202"}, "60": {"y": "0.9273680151134515", "x": "-1.3959575528558614"}, "77": {"y": "1.7866869074652791", "x": "-3.8972959194861883"}, "121": {"y": "0.033921065158746364", "x": "0.57239991426938"}, "123": {"y": "0.7649081576973583", "x": "0.0715194152621144"}, "102": {"y": "0.8401854661577706", "x": "-1.6341580717421227"}, "103": {"y": "1.71695088445156", "x": "-0.5375955871942963"}, "92": {"y": "-0.39671212543568407", "x": "1.0478812287781645"}, "10": {"y": "-2.5262153565350425", "x": "-1.4151193245272573"}, "13": {"y": "0.7407160234944368", "x": "1.0868525066734676"}, "114": {"y": "-1.1571205957293265", "x": "-0.17310321720523522"}, "33": {"y": "-1.3032563015245666", "x": "1.576214462136624"}, "30": {"y": "1.6209848537114595", "x": "0.231756256695321"}, "53": {"y": "-1.6438676423644651", "x": "0.8075740458094969"}, "89": {"y": "0.03392106515874658", "x": "0.5723999142693798"}}')
+
+        var tsneData = JSON.parse('{"133": {"y": "-261.72546", "x": "96.031845"}, "132": {"y": "531.7232", "x": "179.00357"}, "131": {"y": "-330.78183", "x": "129.83327"}, "130": {"y": "204.4145", "x": "-86.774345"}, "110": {"y": "241.56364", "x": "-100.45167"}, "113": {"y": "-109.466324", "x": "-324.03674"}, "68": {"y": "-760.7775", "x": "449.19662"}, "80": {"y": "-47.525906", "x": "-324.32248"}, "81": {"y": "-287.9606", "x": "118.169975"}, "84": {"y": "294.48264", "x": "-52.47401"}, "85": {"y": "174.14648", "x": "232.77615"}, "26": {"y": "-481.45297", "x": "-59.403934"}, "27": {"y": "357.323", "x": "-55.80795"}, "23": {"y": "-309.82022", "x": "180.6427"}, "63": {"y": "237.39006", "x": "232.50652"}, "44": {"y": "-533.3826", "x": "11.739598"}, "1": {"y": "-96.65374", "x": "79.49907"}, "2": {"y": "165.05568", "x": "190.17204"}, "116": {"y": "-558.7335", "x": "-58.927834"}, "4": {"y": "207.59058", "x": "175.21107"}, "7": {"y": "4.963974", "x": "-209.23782"}, "142": {"y": "309.65356", "x": "-95.34405"}, "60": {"y": "355.55347", "x": "-292.10562"}, "77": {"y": "541.73346", "x": "148.00381"}, "121": {"y": "-163.60829", "x": "-103.72187"}, "123": {"y": "-82.13349", "x": "-270.69333"}, "102": {"y": "367.4766", "x": "-257.9045"}, "103": {"y": "-16.767975", "x": "-185.69005"}, "92": {"y": "187.12697", "x": "-53.349106"}, "10": {"y": "-531.43", "x": "-36.825798"}, "13": {"y": "-108.670044", "x": "41.385387"}, "114": {"y": "124.51324", "x": "174.1141"}, "33": {"y": "412.70667", "x": "374.17252"}, "30": {"y": "-137.31134", "x": "-349.6119"}, "53": {"y": "-805.2758", "x": "456.46857"}, "89": {"y": "-181.83655", "x": "-130.20572"}}')
+        /* END LOADING DATA */
+        
+        // Defining size variables for the SVGs
+        var margin = {top: 20, right: 10, bottom: 0, left: 0},
+            width = 306 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom,
+            //edit the 10 axises in the small model grids
+            miniWidth = 253 - margin.left - margin.right,
+            miniHeight = 200 - margin.top - margin.bottom;
+
+        // Choose the initial dimensions that we are rendering
+        var possibleDimensions = Object.keys(happinessData[Object.keys(happinessData)[0]])
+        var xDim = possibleDimensions[0];
+        var yDim = possibleDimensions[1];
+
+        // Store possible choices for projections
+        var projectionOptions = ['axis_aligned', 'pca', 'mds', 'tsne']
+        var currProjectionOption = 'axis_aligned'
+
+        // Initialize the scales and axes
+        var xScale = d3.scale.linear().range([0, width]),
+            xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5),
+            miniXScale = d3.scale.linear().range([0, miniWidth]),
+            miniXAxis = d3.svg.axis().scale(miniXScale).orient("bottom").ticks(5);
+
+        // setup y
+        var yScale = d3.scale.linear().range([height, 0]),
+            yAxis = d3.svg.axis().scale(yScale).orient("right").ticks(5),
+            miniYScale = d3.scale.linear().range([miniHeight, 0]),
+            miniYAxis = d3.svg.axis().scale(miniYScale).orient("right").ticks(5);
+
+        // Define the div for the tooltip
+        // Parse the date / time
+        var div = d3.select("body").append("div")   
+            .attr("class", "tooltip")               
+            .style("opacity", 0);
+        
+        var selectionArrayTP = [];
+        var selectionArrayTN = [];
+        var selectionArrayFP = [];
+        var selectionArrayFN = [];
+
+        initializeProjections()
+        initializeDimensions()
+        var modelContainers = initializeModels();
+        redrawScatterplots(modelContainers);
+        drawConfusionMatrices(modelContainers);
+
+        /* SCATTERPLOT CODE - YOU WILL NEED TO CHANGE THIS */
+        function buildScatterPlot(containerElement, data, modelPredictions, groundTruth) {
+            var svgWidth, svgHeight, scatterXScale, scatterXAxis, scatterYScale, scatterYAxis;
+            if (modelPredictions.length === 0) {
+                // scatter plot is for the whole dataset
+                svgWidth = width;
+                svgHeight = height;
+                scatterXScale = xScale;
+                scatterXAxis = xAxis;
+                scatterYScale = yScale;
+                scatterYAxis = yAxis;
+            } else {
+                // scatter plot is for a particular model
+                svgWidth = miniWidth;
+                svgHeight = miniHeight;
+                scatterXScale = miniXScale;
+                scatterXAxis = miniXAxis;
+                scatterYScale = miniYScale;
+                scatterYAxis = miniYAxis;
+            }
+
+            // We destroy any existing SVGs since we're going to rebuild it.
+            d3.select(containerElement).select('svg').remove()
+
+            // Add the svg
+            svg = d3.select(containerElement)
+                .append('svg')
+
+            svg.attr("width", svgWidth + margin.left + margin.right)
+                .attr("height", svgHeight + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // Add the axes
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + svgHeight + ")")
+                .call(scatterXAxis)
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("x", svgWidth)
+                    .attr("y", -6)
+                    .style("text-anchor", "end")
+                    .text(xDim);
+
+            // y-axis
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(scatterYAxis)
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 18)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text(yDim);
+
+            // draw dots into the scatterplot
+            // CHANGED HERE 
+            svg.selectAll(".dot")
+                .data(data) 
+                    .enter().append("path") // using an SVG path
+                        .attr("d", d3.svg.symbol().type(function(d) { // build in symbol function
+                           if (groundTruth[d.id] == 1) {
+                                return "cross"; // specifiying cross for positives
+                            }
+                            else {
+                                return "circle"; // specifiying circle for negatives
+                            } 
+                        }))
+                        .attr('fill', function(d) {
+                        	// TRUE POSITIVE
+                        	if (selectionArrayTP.includes(""+d.id) && groundTruth[d.id] == 1) {
+                        		//console.log(d.id);
+                        		return 'green';
+                        	}
+                        	// TRUE NEGATIVE
+                        	if (selectionArrayTN.includes(""+d.id) && groundTruth[d.id] != 1) {
+                        		return 'brown'; 
+                        	}
+                        	// FALSE POSITIVE
+                        	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1) {
+                        		return 'orange'; 
+                        	}
+                        	// FALSE NEGATIVE(delete && groundTruth[d.id] == 1)
+                        	if (selectionArrayFN.includes(""+d.id) && groundTruth[d.id] == 1) {
+                        		return 'purple'; 
+                        	}
+                        	return 'none';
+                        })
+//                         .classed('groundtruth', function(d) {
+//                         	if (groundTruth[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
+//                         .classed('predicted', function(d) {
+//                         	if (modelPredictions[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
+                        .attr('stroke', function(d) {
+                            if (groundTruth[d.id] == null || modelPredictions[d.id] == null) {
+                                return "grey"; // this will make sure the graph on the top left is black
+                            }
+                            else if (groundTruth[d.id] == modelPredictions[d.id]){
+                                    return "blue"; // data point green if model got that data point correct
+                                }
+                            else if (groundTruth[d.id] != modelPredictions[d.id]) {
+                                    return "red"; // data point red if model got that data point incorrect
+                            }
+                          
+                        })
+                        .attr("transform", (d) => 
+                            { // translating each point so that each data point is in the right location of the graph
+                            return `translate(${scatterXScale(d.x)},${scatterYScale(d.y)})`;
+                            })
+                        .on("mouseover", function(d) { // adding on hover, uses the tooltip above
+                            div.transition()        
+                                .duration(200)      
+                                .style("opacity", .9);      
+                            div .html( // displaying specific statistics based on group
+                                        "city_services: " + happinessData[d.id]["city_services"] + "<br/>" 
+                                        + "events: " + happinessData[d.id]["events"] + "<br/>" 
+                                        + "housing_cost: " + happinessData[d.id]["housing_cost"] + "<br/>" 
+                                        + "schools: " + happinessData[d.id]["schools"] + "<br/>" 
+                                        + "streets_sidewalks: " + happinessData[d.id]["streets_sidewalks"] + "<br/>" 
+                                        + "trust_police: " + happinessData[d.id]["trust_police"]
+                                    )
+                                .style("left", (d3.event.pageX) + "px")     
+                                .style("top", (d3.event.pageY - 28) + "px");    
+                            })                  
+                        .on("mouseout", function(d) {       
+                            div.transition()        
+                                .duration(500)      
+                                .style("opacity", 0);   
+                        });
+
+        }
+        /* END SCATTERPLOT CODE */
+		
+        /* BEGIN CONFUSION MATRIX CODE */
+        function buildConfusionMatrix(containerElement, groundTruth, modelPredictions) {
+            // Code below makes the confusion matrix
+            var table = d3.select(containerElement).append('table')
+                            .attr('class', 'confusion-matrix-table')
+
+            // Creating the other cells of the table
+            // Edit the structure of the confusion matrix
+            table.append('tr').html('<br><td><tr>Ground Truth</tr>')
+            table.append('tr').html('<br><td><td>T</td><td>F</td>')
+            predictedTrueRow = table.append('tr').html('<tr>Predicted<br><td>T</td>')
+            predictedFalseRow = table.append('tr').html('<br></td><td>F</td>')
+
+           // Here, filling in the values.  This is also where you can style the confusion matrix.
+            var truePositives = 0;
+            var trueNegatives = 0;
+            var falsePositives = 0;
+            var falseNegatives = 0;
+
+            // itterating through each key within ground truth
+            // this allows access to each specific model's confusion matrix 
+            for (key in groundTruth) {
+                if (groundTruth[key] == 1) { // comparing with model predictions
+                    if (groundTruth[key] == modelPredictions[key]) {
+                        truePositives += 1;
+                    }
+                    else {
+                        falseNegatives += 1; 
+                    }
+                }
+                else {
+                    if (groundTruth[key] == modelPredictions[key]) {
+                        trueNegatives += 1; 
+                    }
+                    else {
+                        falsePositives += 1; 
+                    }
+                }
+            }
+                
+            predictedTrueRow.append('td')
+                            .attr('class', 'innerMatrix')
+                            .text(truePositives)
+                            // color the NUMBER to green if click that specific number
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "green");
+          						selectionArrayTP = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] == modelPredictions[key]) {
+          			                        selectionArrayTP.push(key);
+          			                }
+          			            }
+          			              redrawScatterplots(modelContainers);
+                              }
+                            )
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayTP = [];
+                        	})
+            
+                                      
+//             svg = d3.select(containerElement)
+//                 .append('svg')
+//                 .data(data) 
+//                     .enter().append("path") // using an SVG path
+//                         .attr("d", d3.svg.symbol().type(function(d) {
+//                         	if (!truePositives) {
+//                                 return "grey"; // specifiying cross for positives
+//                             }
+//                         }
+                            
+            predictedTrueRow.append('td')
+                            .attr('class', 'innerMatrix')
+                            .text(falsePositives)
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "orange");
+          						//d3.select(falsePositives).style("color", "orange");
+          						selectionArrayFP = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] != modelPredictions[key]) {
+          			                        selectionArrayFP.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);})
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayFP = [];
+                        	})
+                            
+            predictedFalseRow.append('td')
+                            .attr('class', 'innerMatrix')
+                            .text(falseNegatives)
+                            .on("mouseover", function(){
+          						d3.select(this)
+            						.style("color", "purple");
+          						selectionArrayFN = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] != modelPredictions[key]) {
+          			                        selectionArrayFN.push(key);
+          			                }
+          			            }
+          						//console.log(selectionArray);
+          			              redrawScatterplots(modelContainers);})
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayFN = [];
+                        	})
+
+            predictedFalseRow.append('td')
+                            .attr('class', 'innerMatrix')
+                            .text(trueNegatives)
+                            .on("mouseover", function(){
+      						d3.select(this)
+        						.style("color", "red")
+          						selectionArrayTN = [];
+          						for (key in groundTruth) {
+          			                if (groundTruth[key] == modelPredictions[key]) {
+          			                        selectionArrayTN.push(key);
+          			                }
+          			            }
+          						console.log(selectionArrayTN);
+          			            redrawScatterplots(modelContainers);
+          			        d3.select(trueNegatives)
+          			             .style("color", "red")
+          			        })
+          		 			.on("mouseout", function() {       
+                     			d3.select(this)        
+                          			.style("color", "black");
+                     			selectionArrayTN = [];
+                        	})
+        }
+        /* END CONFUSION MATRIX CODE */
+
+        /* BEGIN SUPPORT CODE */
+        function initializeProjections() {
+            var optionSlots = d3.select('#projection-select')
+                .selectAll('div.proj')
+                .data(projectionOptions)
+                .enter()
+                .append('div')
+
+            optionSlots
+                    .append('input')
+                    .attr('type', 'radio')
+                    .attr('name', 'projection')
+                    .attr('value', (d) => d)
+                    .property("checked", function(d){ return d === currProjectionOption; })
+
+            optionSlots
+                    .append('label')
+                    .attr('for', (d) => d)
+                    .text((d) => d)
+
+            d3.selectAll("input[name='projection']")
+                .on("change", function(d) {
+                    index = this.value;
+                    currProjectionOption = index;
+                    redrawScatterplots(modelContainers);
+                })
+
+        }
+
+        function initializeDimensions() {
+            // Fill in the possible dimensions into the select lists
+            d3.select('#x-axis-select')
+                .selectAll('option')
+                .data(possibleDimensions)
+                .enter()
+                    .append('option')
+                    .text((d) => d)
+                    .attr('value', (d,i) => i)
+                    .property("selected", function(d){ return d === xDim; })
+
+            d3.select('#y-axis-select')
+                .selectAll('option')
+                .data(possibleDimensions)
+                .enter()
+                    .append('option')
+                    .text((d) => d)
+                    .attr('value', (d,i) => i)
+                    .property("selected", function(d){ return d === yDim; })
+
+            d3.select("#x-axis-select")
+            .on("change", function(d) {
+                index = this.value;
+                xDim = possibleDimensions[index];
+                redrawScatterplots(modelContainers);
+            })
+
+            d3.select("#y-axis-select")
+            .on("change", function(d) {
+                index = this.value;
+                yDim = possibleDimensions[index];
+                redrawScatterplots(modelContainers);
+            })
+
+        }
+
+        function calculateScales(scatterplotData) {
+            if (currProjectionOption === 'axis_aligned') {
+                xScale.domain([-0.5, 6.0])
+                yScale.domain([-0.5, 6.0])
+                miniXScale.domain([-0.5, 6.0])
+                miniYScale.domain([-0.5, 6.0])                
+            } else {
+                xScale.domain(d3.extent(scatterplotData, (d) => d['x']))
+                yScale.domain(d3.extent(scatterplotData, (d) => d['y']))
+                miniXScale.domain(d3.extent(scatterplotData, (d) => d['x']))
+                miniYScale.domain(d3.extent(scatterplotData, (d) => d['y']))                
+
+                xScale.nice()
+                yScale.nice()
+                miniXScale.nice()
+                miniYScale.nice()                
+            }
+        }
+
+        function initializeModels() {
+            // console.log("initializing models, there should be data ", Object.keys(predictionData))
+            var lightsOn = false;
+            d3.select('.models-container ul')
+                .selectAll('li')
+                .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
+                    .append('li')
+	                .on("click", function(){
+                        console.log("lightsOn == " + lightsOn);
+                        if (lightsOn == false){
+                            //d3.select(this)
+	    						//.style("color", "brown")
+                                var elementColor = d3.select(this).style("border-color");
+                                //console.log("elementColor: " + elementColor);
+                                //console.log("I have reached the lightsOn == false case");
+                                if (elementColor == 'rgb(198, 214, 230)') {
+                                    //console.log("I have reached the inner if");
+                                    d3.select(this).style("border-color", "#00008b")
+                                    lightsOn = true;
+                                    updateData();
+                                }
+                                
+                                //console.log("lightsOn == " + lightsOn);
+                        }
+                        else{                                
+		                         //.style("color", "black");
+                                 //console.log("I have reached the lightsOn == true case");
+                                 
+                                 var elementColor2 = d3.select(this).style("border-color");
+                                 //console.log("elementColor: " + elementColor2);
+                                 if (elementColor2 == 'rgb(0, 0, 139)') {
+                                    //console.log("reached inner if statement");
+                                    d3.select(this).style("border-color", "#c6d6e6")
+                                    lightsOn = false;
+                                }
+                                //console.log("lightsOn == " + lightsOn);
+                                 
+                        }
+
+                    })
+	      			     
+			      	
+                    .attr('class', 'model-li')
+                    .attr('id', (d) => d.replace(/ /g,"-"))
+                    .html((d) => '<h2>' + d + '</h2>')
+                        .append('div')
+                        .attr('class', 'model-confusion-matrix')
+                        .attr('id', (d) => 'model-confusion-matrix-' + d.replace(/ /g,"-"))
+
+            return Object.keys(predictionData)
+        }
+
+        function updateData(){
+            console.log("update date");
+            //d3("data-control-container").redrawScatterplots(modelContainers);
+            redrawScatterplots(modelContainers);
+
+        }
+        function parseData(data) {
+            // We need to add some random jitter because there are so few points
+            epsilon = 0.4
+
+            // Different accessor functions based on if it's axis-aligned or not
+            var projAccessor = function (k) {
+                var projData;
+                if (currProjectionOption === 'apca') {
+                    projData = pcaData;
+                } else if (currProjectionOption === 'mds') {
+                    projData = mdsData;
+                } else if (currProjectionOption === 'tsne') {
+                    projData = tsneData;
+                }
+                return {id: parseInt(k), x: parseFloat(projData[k]['x']), y: parseFloat(projData[k]['y'])}
+            }
+
+            var axisAlignedAccessor = function(k) { return {id: parseInt(k), x: data[k][xDim] + ((0.5 - Math.random()) * epsilon), y: data[k][yDim] + ((0.5 - Math.random()) * epsilon)} }
+
+            var scatterplotData;
+            if (currProjectionOption === 'axis_aligned') {
+                scatterplotData = Object.keys(data).map(axisAlignedAccessor)            
+            } else {                
+                scatterplotData = Object.keys(data).map(projAccessor)            
+            }
+            return scatterplotData;
+        }
+
+        function redrawScatterplots(modelContainers) {
+            scatterplotData = parseData(happinessData)
+            calculateScales(scatterplotData);
+            // Render the data svg
+            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'],happinessData)
+
+            modelContainers.forEach((c) => { buildScatterPlot('#' + c.replace(/ /g,"-"), scatterplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
+        }
+
+        function drawConfusionMatrices(modelContainers) {
+            modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
+        }
+    </script>
+</body>
+
+</html>
