@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 
 <head>
-	<h1><center>Welcome to Model Selection (Stage First)</center></h1>
+	<h1><center>Welcome to Model Selection (Outcome First)</center></h1>
         
     <style>
     .axis {
@@ -122,6 +122,7 @@
 	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
+	<a href="outcomeinde_barplot.html" title="Outcome First - BarPlot"><button class="big-button">Outcome First - BarPlot</button></a>
 	
 	
        <!-- The places where we can add click on models -->
@@ -592,7 +593,7 @@
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        //console.log("lightsOn == " + lightsOn);
+                        console.log("lightsOn == " + lightsOn);
                         if (lightsOn == false){
                             //d3.select(this)
 	    						//.style("color", "brown")
@@ -636,17 +637,10 @@
             return Object.keys(predictionData)
         }
 
-        function getID() {
-            return event.srcElement.id;
-        }
-
         function updateData(){
-            var ID = getID();
-            console.log ("ID:" + ID);
-            //redrawScatterplots(modelContainers);
-            //console.log("Updating.....");
-             buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'],happinessData)
-            
+            console.log("update date");
+            //d3("data-control-container").redrawScatterplots(modelContainers);
+            redrawScatterplots(modelContainers);
 
         }
         function parseData(data) {
@@ -689,7 +683,6 @@
         function drawConfusionMatrices(modelContainers) {
             modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
         }
-
     </script>
 </body>
 
