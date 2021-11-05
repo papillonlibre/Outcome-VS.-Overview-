@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 
 <head>
-	<h1><center>Welcome to Model Selection (Outcome First)</center></h1>
+	<h1><center>Welcome to Model Selection (Stage First)</center></h1>
         
     <style>
     .axis {
@@ -36,7 +36,6 @@
         grid-gap: 20px;
         grid-template-columns: 30% 30% 30%; /*each represent one column*/
         list-style-type: none;
-        
     }
     .model-confusion-matrix {
     	text-align: center;
@@ -122,15 +121,14 @@
 	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
-	<a href="outcomeinde_barplot.html" title="Outcome First - BarPlot"><button class="big-button">Outcome First - BarPlot</button></a>
 	
 	
        <!-- The places where we can add click on models -->
        <div class = 'container'>
-            <div class='dataset-container'>
+            <!-- <div class='dataset-container'>
                 <div class='svg-container' id='dataset-svg' >
-            </div>
-                <div class='data-control-container' >
+            </div> -->
+                <!-- <div class='data-control-container' >
                     <p>
                         X-axis: 
                         <select name="x-axis" id="x-axis-select" >
@@ -140,7 +138,7 @@
                         Y-axis:
                         <select name="y-axis" id="y-axis-select" >
                         </select>
-                    </p>
+                    </p> -->
                     </p>
                     <p> Dimensionality Reduction Techniques for Data Visualization:
                     </p>
@@ -298,14 +296,17 @@
                         	}
                         	// TRUE NEGATIVE
                         	if (selectionArrayTN.includes(""+d.id) && groundTruth[d.id] != 1) {
+                                //console.log(d.id);
                         		return 'brown'; 
                         	}
                         	// FALSE POSITIVE
                         	if (selectionArrayFP.includes(""+d.id) && groundTruth[d.id] != 1) {
+                                //console.log(d.id);
                         		return 'orange'; 
                         	}
                         	// FALSE NEGATIVE(delete && groundTruth[d.id] == 1)
                         	if (selectionArrayFN.includes(""+d.id) && groundTruth[d.id] == 1) {
+                                //console.log(d.id);
                         		return 'purple'; 
                         	}
                         	return 'none';
@@ -593,7 +594,7 @@
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        console.log("lightsOn == " + lightsOn);
+                        //console.log("lightsOn == " + lightsOn);
                         if (lightsOn == false){
                             //d3.select(this)
 	    						//.style("color", "brown")
@@ -637,11 +638,22 @@
             return Object.keys(predictionData)
         }
 
-        function updateData(){
-            console.log("update date");
-            //d3("data-control-container").redrawScatterplots(modelContainers);
-            redrawScatterplots(modelContainers);
+        function getID() {
+            return event.srcElement.id;
+        }
 
+        function updateData(){
+            var ID = getID();
+            console.log ("ID:" + ID);
+            //console.log("Updating.....");
+            buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'])
+            
+
+        }
+
+        function getTT () {
+            var ID = getID();
+            
         }
         function parseData(data) {
             // We need to add some random jitter because there are so few points
@@ -675,7 +687,8 @@
             scatterplotData = parseData(happinessData)
             calculateScales(scatterplotData);
             // Render the data svg
-            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'],happinessData)
+            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'])
+            
 
             modelContainers.forEach((c) => { buildScatterPlot('#' + c.replace(/ /g,"-"), scatterplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
         }
@@ -683,6 +696,12 @@
         function drawConfusionMatrices(modelContainers) {
             modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
         }
+        function reOrderScatterPlots() {
+            // need to split them up 
+            // need to create new buttons
+            // need to call it in redraw
+        }
+
     </script>
 </body>
 
