@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 
 <head>
-	<h1><center>Welcome to Model Selection (Stage View First)</center></h1>
+	<h1><center>Welcome to Model Selection (Stage First)</center></h1>
         
     <style>
     .axis {
@@ -23,16 +23,20 @@
     }
     .dataset-container {
         grid-column: 1 / 1;
+        position: fixed;
+        width: 30%;
+        left: 0;
+        bottom: 0;
     }
     .models-container {
-        grid-column: 2/2;
+        grid-column: 2 / 2;
     }
     .models-container ul {
-        display: inline-grid;
+        display: grid;
         grid-gap: 20px;
-        grid-template-rows: 25% 25% 25%;
         grid-template-columns: 30% 30% 30%; /*each represent one column*/
-        list-style-type: none;        
+        list-style-type: none;
+        
     }
     .model-confusion-matrix {
     	text-align: center;
@@ -111,41 +115,45 @@
 </style>
     
 <body>
-	<div><center>
+	<div>
+	<center>
 	<h2>Please select the Model Selection Methods below</h2>
 	<link rel="stylesheet" href="index.css">
 	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
-	</center></div>
 	
-    <div class='container'>
-        <div class='dataset-container'>
-            <div class='svg-container' id='dataset-svg'>
+	
+       <!-- The places where we can add click on models -->
+       <div class = 'container'>
+            <div class='dataset-container'>
+                <div class='svg-container' id='dataset-svg' >
             </div>
-            <div class='data-control-container'>
-                <p>
-                    X-axis: 
-                    <select name="x-axis" id="x-axis-select">
-                    </select>
-                </p>
-                <p>
-                    Y-axis:
-                    <select name="y-axis" id="y-axis-select">
-                    </select>
-                </p>
-                </p>
-                <p> Dimensionality Reduction Techniques for Data Visualization:
-                </p>
+                <div class='data-control-container' >
+                    <p>
+                        X-axis: 
+                        <select name="x-axis" id="x-axis-select" >
+                        </select>
+                    </p>
+                    <p>
+                        Y-axis:
+                        <select name="y-axis" id="y-axis-select" >
+                        </select>
+                    </p>
+                    </p>
+                    <p> Dimensionality Reduction Techniques for Data Visualization:
+                    </p>
+                </div>
+                <div class='data-control-container' id='projection-select'>
+                </div>
             </div>
-            <div class='data-control-container' id='projection-select'>
+            <div class='models-container' >
+                <ul>
+                </ul>
             </div>
+        </center>
+        
         </div>
-        <div class='models-container'>
-            <ul>
-            </ul>
-        </div>
-    </div>
 
 
     <script src="./d3.min.js"></script>
@@ -164,7 +172,7 @@
 
         var tsneData = JSON.parse('{"133": {"y": "-261.72546", "x": "96.031845"}, "132": {"y": "531.7232", "x": "179.00357"}, "131": {"y": "-330.78183", "x": "129.83327"}, "130": {"y": "204.4145", "x": "-86.774345"}, "110": {"y": "241.56364", "x": "-100.45167"}, "113": {"y": "-109.466324", "x": "-324.03674"}, "68": {"y": "-760.7775", "x": "449.19662"}, "80": {"y": "-47.525906", "x": "-324.32248"}, "81": {"y": "-287.9606", "x": "118.169975"}, "84": {"y": "294.48264", "x": "-52.47401"}, "85": {"y": "174.14648", "x": "232.77615"}, "26": {"y": "-481.45297", "x": "-59.403934"}, "27": {"y": "357.323", "x": "-55.80795"}, "23": {"y": "-309.82022", "x": "180.6427"}, "63": {"y": "237.39006", "x": "232.50652"}, "44": {"y": "-533.3826", "x": "11.739598"}, "1": {"y": "-96.65374", "x": "79.49907"}, "2": {"y": "165.05568", "x": "190.17204"}, "116": {"y": "-558.7335", "x": "-58.927834"}, "4": {"y": "207.59058", "x": "175.21107"}, "7": {"y": "4.963974", "x": "-209.23782"}, "142": {"y": "309.65356", "x": "-95.34405"}, "60": {"y": "355.55347", "x": "-292.10562"}, "77": {"y": "541.73346", "x": "148.00381"}, "121": {"y": "-163.60829", "x": "-103.72187"}, "123": {"y": "-82.13349", "x": "-270.69333"}, "102": {"y": "367.4766", "x": "-257.9045"}, "103": {"y": "-16.767975", "x": "-185.69005"}, "92": {"y": "187.12697", "x": "-53.349106"}, "10": {"y": "-531.43", "x": "-36.825798"}, "13": {"y": "-108.670044", "x": "41.385387"}, "114": {"y": "124.51324", "x": "174.1141"}, "33": {"y": "412.70667", "x": "374.17252"}, "30": {"y": "-137.31134", "x": "-349.6119"}, "53": {"y": "-805.2758", "x": "456.46857"}, "89": {"y": "-181.83655", "x": "-130.20572"}}')
         /* END LOADING DATA */
-
+        
         // Defining size variables for the SVGs
         var margin = {top: 20, right: 10, bottom: 0, left: 0},
             width = 306 - margin.left - margin.right,
@@ -301,16 +309,29 @@
                         	}
                         	return 'none';
                         })
+//                         .classed('groundtruth', function(d) {
+//                         	if (groundTruth[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
+//                         .classed('predicted', function(d) {
+//                         	if (modelPredictions[d.id] == 1) {
+//                         		return true;
+//                         	}
+//                         	return false;
+//                         })
                         .attr('stroke', function(d) {
                             if (groundTruth[d.id] == null || modelPredictions[d.id] == null) {
                                 return "grey"; // this will make sure the graph on the top left is black
                             }
                             else if (groundTruth[d.id] == modelPredictions[d.id]){
-                                return "blue"; // data point green if model got that data point correct
-                            }
+                                    return "blue"; // data point green if model got that data point correct
+                                }
                             else if (groundTruth[d.id] != modelPredictions[d.id]) {
-                                return "red"; // data point red if model got that data point incorrect
+                                    return "red"; // data point red if model got that data point incorrect
                             }
+                          
                         })
                         .attr("transform", (d) => 
                             { // translating each point so that each data point is in the right location of the graph
@@ -565,10 +586,46 @@
 
         function initializeModels() {
             // console.log("initializing models, there should be data ", Object.keys(predictionData))
+            var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
+	                .on("click", function(){
+                        //console.log("lightsOn == " + lightsOn);
+                        if (lightsOn == false){
+                            //d3.select(this)
+	    						//.style("color", "brown")
+                                var elementColor = d3.select(this).style("border-color");
+                                //console.log("elementColor: " + elementColor);
+                                //console.log("I have reached the lightsOn == false case");
+                                if (elementColor == 'rgb(198, 214, 230)') {
+                                    //console.log("I have reached the inner if");
+                                    d3.select(this).style("border-color", "#00008b")
+                                    lightsOn = true;
+                                    updateData();
+                                }
+                                
+                                //console.log("lightsOn == " + lightsOn);
+                        }
+                        else{                                
+		                         //.style("color", "black");
+                                 //console.log("I have reached the lightsOn == true case");
+                                 
+                                 var elementColor2 = d3.select(this).style("border-color");
+                                 //console.log("elementColor: " + elementColor2);
+                                 if (elementColor2 == 'rgb(0, 0, 139)') {
+                                    //console.log("reached inner if statement");
+                                    d3.select(this).style("border-color", "#c6d6e6")
+                                    lightsOn = false;
+                                }
+                                //console.log("lightsOn == " + lightsOn);
+                                 
+                        }
+
+                    })
+	      			     
+			      	
                     .attr('class', 'model-li')
                     .attr('id', (d) => d.replace(/ /g,"-"))
                     .html((d) => '<h2>' + d + '</h2>')
@@ -579,6 +636,19 @@
             return Object.keys(predictionData)
         }
 
+        function getID() {
+            return event.srcElement.id;
+        }
+
+        function updateData(){
+            var ID = getID();
+            console.log ("ID:" + ID);
+            //redrawScatterplots(modelContainers);
+            //console.log("Updating.....");
+             buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'],happinessData)
+            
+
+        }
         function parseData(data) {
             // We need to add some random jitter because there are so few points
             epsilon = 0.4
@@ -586,7 +656,7 @@
             // Different accessor functions based on if it's axis-aligned or not
             var projAccessor = function (k) {
                 var projData;
-                if (currProjectionOption === 'pca') {
+                if (currProjectionOption === 'apca') {
                     projData = pcaData;
                 } else if (currProjectionOption === 'mds') {
                     projData = mdsData;
@@ -611,7 +681,7 @@
             scatterplotData = parseData(happinessData)
             calculateScales(scatterplotData);
             // Render the data svg
-            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'], happinessData)
+            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'],happinessData)
 
             modelContainers.forEach((c) => { buildScatterPlot('#' + c.replace(/ /g,"-"), scatterplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
         }
@@ -619,6 +689,7 @@
         function drawConfusionMatrices(modelContainers) {
             modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
         }
+
     </script>
 </body>
 
