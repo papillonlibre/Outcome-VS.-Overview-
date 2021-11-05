@@ -122,6 +122,8 @@
 	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
+	<a href="outcomeinde_barplot.html" title="Outcome First - BarPlot"><button class="big-button">Outcome First - BarPlot</button></a>
+	
 	
 	
        <!-- The places where we can add click on models -->
@@ -139,9 +141,6 @@
                         Y-axis:
                         <select name="y-axis" id="y-axis-select" >
                         </select>
-                    </p>
-                    </p>
-                    <p> Dimensionality Reduction Techniques for Data Visualization:
                     </p>
                 </div>
                 <div class='data-control-container' id='projection-select'>
@@ -187,8 +186,8 @@
         var yDim = possibleDimensions[1];
 
         // Store possible choices for projections
-        var projectionOptions = ['axis_aligned', 'pca', 'mds', 'tsne']
-        var currProjectionOption = 'axis_aligned'
+        /* var projectionOptions = ['axis_aligned', 'pca', 'mds', 'tsne']
+        var currProjectionOption = 'axis_aligned' */
 
         // Initialize the scales and axes
         var xScale = d3.scale.linear().range([0, width]),
@@ -216,32 +215,32 @@
         initializeProjections()
         initializeDimensions()
         var modelContainers = initializeModels();
-        redrawScatterplots(modelContainers);
+        // redrawBarplots(modelContainers);
         drawConfusionMatrices(modelContainers);
 
         /* SCATTERPLOT CODE - YOU WILL NEED TO CHANGE THIS */
-        function buildScatterPlot(containerElement, data, modelPredictions, groundTruth) {
-            var svgWidth, svgHeight, scatterXScale, scatterXAxis, scatterYScale, scatterYAxis;
+        function buildBarPlot(containerElement, data, modelPredictions, groundTruth) {
+            var svgWidth, svgHeight, barXScale, barXAxis, barYScale, barYAxis;
             if (modelPredictions.length === 0) {
-                // scatter plot is for the whole dataset
+                // bar plot is for the whole dataset
                 svgWidth = width;
                 svgHeight = height;
-                scatterXScale = xScale;
-                scatterXAxis = xAxis;
-                scatterYScale = yScale;
-                scatterYAxis = yAxis;
+                barXScale = xScale;
+                barXAxis = xAxis;
+                barYScale = yScale;
+                barYAxis = yAxis;
             } else {
-                // scatter plot is for a particular model
+                // bar plot is for a particular model
                 svgWidth = miniWidth;
                 svgHeight = miniHeight;
-                scatterXScale = miniXScale;
-                scatterXAxis = miniXAxis;
-                scatterYScale = miniYScale;
-                scatterYAxis = miniYAxis;
+                barXScale = miniXScale;
+                barXAxis = miniXAxis;
+                barYScale = miniYScale;
+                barYAxis = miniYAxis;
             }
 
             // We destroy any existing SVGs since we're going to rebuild it.
-            d3.select(containerElement).select('svg').remove()
+            //d3.select(containerElement).select('svg').remove()
 
             // Add the svg
             svg = d3.select(containerElement)
@@ -256,7 +255,7 @@
             svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + svgHeight + ")")
-                .call(scatterXAxis)
+                .call(barXAxis)
                     .append("text")
                     .attr("class", "label")
                     .attr("x", svgWidth)
@@ -267,7 +266,7 @@
             // y-axis
             svg.append("g")
                 .attr("class", "y axis")
-                .call(scatterYAxis)
+                .call(barYAxis)
                     .append("text")
                     .attr("class", "label")
                     .attr("transform", "rotate(-90)")
@@ -277,7 +276,7 @@
                     .text(yDim);
 
             // draw dots into the scatterplot
-            // CHANGED HERE 
+            // CHANGED HERE: Draw bars into the barplot 
             svg.selectAll(".dot")
                 .data(data) 
                     .enter().append("path") // using an SVG path
@@ -335,7 +334,7 @@
                         })
                         .attr("transform", (d) => 
                             { // translating each point so that each data point is in the right location of the graph
-                            return `translate(${scatterXScale(d.x)},${scatterYScale(d.y)})`;
+                            return `translate(${barXScale(d.x)},${barYScale(d.y)})`;
                             })
                         .on("mouseover", function(d) { // adding on hover, uses the tooltip above
                             div.transition()        
@@ -414,7 +413,7 @@
           			                        selectionArrayTP.push(key);
           			                }
           			            }
-          			              redrawScatterplots(modelContainers);
+          			              //redrawBarplots(modelContainers);
                               }
                             )
           		 			.on("mouseout", function() {       
@@ -423,24 +422,12 @@
                      			selectionArrayTP = [];
                         	})
             
-                                      
-//             svg = d3.select(containerElement)
-//                 .append('svg')
-//                 .data(data) 
-//                     .enter().append("path") // using an SVG path
-//                         .attr("d", d3.svg.symbol().type(function(d) {
-//                         	if (!truePositives) {
-//                                 return "grey"; // specifiying cross for positives
-//                             }
-//                         }
-                            
             predictedTrueRow.append('td')
                             .attr('class', 'innerMatrix')
                             .text(falsePositives)
                             .on("mouseover", function(){
           						d3.select(this)
             						.style("color", "orange");
-          						//d3.select(falsePositives).style("color", "orange");
           						selectionArrayFP = [];
           						for (key in groundTruth) {
           			                if (groundTruth[key] != modelPredictions[key]) {
@@ -448,7 +435,7 @@
           			                }
           			            }
           						//console.log(selectionArray);
-          			              redrawScatterplots(modelContainers);})
+          			            //redrawBarplots(modelContainers);})
           		 			.on("mouseout", function() {       
                      			d3.select(this)        
                           			.style("color", "black");
@@ -468,7 +455,7 @@
           			                }
           			            }
           						//console.log(selectionArray);
-          			              redrawScatterplots(modelContainers);})
+          			            //redrawBarplots(modelContainers);})
           		 			.on("mouseout", function() {       
                      			d3.select(this)        
                           			.style("color", "black");
@@ -487,8 +474,8 @@
           			                        selectionArrayTN.push(key);
           			                }
           			            }
-          						console.log(selectionArrayTN);
-          			            redrawScatterplots(modelContainers);
+          						//console.log(selectionArrayTN);
+          			            //redrawBarplots(modelContainers);
           			        d3.select(trueNegatives)
           			             .style("color", "red")
           			        })
@@ -513,19 +500,19 @@
                     .attr('type', 'radio')
                     .attr('name', 'projection')
                     .attr('value', (d) => d)
-                    .property("checked", function(d){ return d === currProjectionOption; })
+                    //.property("checked", function(d){ return d === currProjectionOption; })
 
             optionSlots
                     .append('label')
                     .attr('for', (d) => d)
                     .text((d) => d)
 
-            d3.selectAll("input[name='projection']")
+            /* d3.selectAll("input[name='projection']")
                 .on("change", function(d) {
                     index = this.value;
                     currProjectionOption = index;
-                    redrawScatterplots(modelContainers);
-                })
+                    redrawBarplots(modelContainers);
+                }) */
 
         }
 
@@ -553,35 +540,35 @@
             .on("change", function(d) {
                 index = this.value;
                 xDim = possibleDimensions[index];
-                redrawScatterplots(modelContainers);
+                redrawBarplots(modelContainers);
             })
 
             d3.select("#y-axis-select")
             .on("change", function(d) {
                 index = this.value;
                 yDim = possibleDimensions[index];
-                redrawScatterplots(modelContainers);
+                redrawBarplots(modelContainers);
             })
 
         }
 
-        function calculateScales(scatterplotData) {
-            if (currProjectionOption === 'axis_aligned') {
+        function calculateScales(barplotData) {
+            //if (currProjectionOption === 'axis_aligned') {
                 xScale.domain([-0.5, 6.0])
                 yScale.domain([-0.5, 6.0])
                 miniXScale.domain([-0.5, 6.0])
                 miniYScale.domain([-0.5, 6.0])                
-            } else {
-                xScale.domain(d3.extent(scatterplotData, (d) => d['x']))
-                yScale.domain(d3.extent(scatterplotData, (d) => d['y']))
-                miniXScale.domain(d3.extent(scatterplotData, (d) => d['x']))
-                miniYScale.domain(d3.extent(scatterplotData, (d) => d['y']))                
+            /*} else {
+                xScale.domain(d3.extent(barplotData, (d) => d['x']))
+                yScale.domain(d3.extent(barplotData, (d) => d['y']))
+                miniXScale.domain(d3.extent(barplotData, (d) => d['x']))
+                miniYScale.domain(d3.extent(barplotData, (d) => d['y']))                
 
                 xScale.nice()
                 yScale.nice()
                 miniXScale.nice()
                 miniYScale.nice()                
-            }
+            }*/
         }
 
         function initializeModels() {
@@ -636,47 +623,51 @@
             return Object.keys(predictionData)
         }
 
+        /*//No need to update data anymore, the barplots are stable 
         function updateData(){
             console.log("update date");
             //d3("data-control-container").redrawScatterplots(modelContainers);
-            redrawScatterplots(modelContainers);
+            redrawBarplots(modelContainers);
+        } */
+        
+//		   just parse the raw data of each confusion matrix category to the barplot
+//             
+//         function parseData(data) {
+//             // We need to add some random jitter because there are so few points
+//             epsilon = 0.4
 
-        }
-        function parseData(data) {
-            // We need to add some random jitter because there are so few points
-            epsilon = 0.4
+//             // Different accessor functions based on if it's axis-aligned or not
+//             var projAccessor = function (k) {
+//                 var projData;
+//                 if (currProjectionOption === 'apca') {
+//                     projData = pcaData;
+//                 } else if (currProjectionOption === 'mds') {
+//                     projData = mdsData;
+//                 } else if (currProjectionOption === 'tsne') {
+//                     projData = tsneData;
+//                 }
+//                 return {id: parseInt(k), x: parseFloat(projData[k]['x']), y: parseFloat(projData[k]['y'])}
+//             }
 
-            // Different accessor functions based on if it's axis-aligned or not
-            var projAccessor = function (k) {
-                var projData;
-                if (currProjectionOption === 'apca') {
-                    projData = pcaData;
-                } else if (currProjectionOption === 'mds') {
-                    projData = mdsData;
-                } else if (currProjectionOption === 'tsne') {
-                    projData = tsneData;
-                }
-                return {id: parseInt(k), x: parseFloat(projData[k]['x']), y: parseFloat(projData[k]['y'])}
-            }
+//             //just parse the raw data of each confusion matrix category to the barplot
+//             var axisAlignedAccessor = function(k) { return {id: parseInt(k), x: data[k][xDim] + ((0.5 - Math.random()) * epsilon), y: data[k][yDim] + ((0.5 - Math.random()) * epsilon)} }
 
-            var axisAlignedAccessor = function(k) { return {id: parseInt(k), x: data[k][xDim] + ((0.5 - Math.random()) * epsilon), y: data[k][yDim] + ((0.5 - Math.random()) * epsilon)} }
+//             var barplotData;
+//             if (currProjectionOption === 'axis_aligned') {
+//                 barplotData = Object.keys(data).map(axisAlignedAccessor)            
+//             } else {                
+//                 barplotData = Object.keys(data).map(projAccessor)            
+//             }
+//             return barplotData;
+//         }
 
-            var scatterplotData;
-            if (currProjectionOption === 'axis_aligned') {
-                scatterplotData = Object.keys(data).map(axisAlignedAccessor)            
-            } else {                
-                scatterplotData = Object.keys(data).map(projAccessor)            
-            }
-            return scatterplotData;
-        }
-
-        function redrawScatterplots(modelContainers) {
-            scatterplotData = parseData(happinessData)
-            calculateScales(scatterplotData);
+        function redrawBarplots(modelContainers) {
+            barplotData = parseData(happinessData)
+            calculateScales(barplotData);
             // Render the data svg
-            buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'],happinessData)
+            buildBarPlot('#dataset-svg', barplotData, [], predictionData['ground_truth'],happinessData)
 
-            modelContainers.forEach((c) => { buildScatterPlot('#' + c.replace(/ /g,"-"), scatterplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
+            modelContainers.forEach((c) => { buildBarPlot('#' + c.replace(/ /g,"-"), barplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
         }
 
         function drawConfusionMatrices(modelContainers) {
