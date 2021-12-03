@@ -650,8 +650,19 @@
                 let p = document.getElementById("Nearest-Neighbors");
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
+                console.log(comparison);
                 console.log("clone node was called");
                 comparison = p_prime;
+                console.log(comparison);
+            }
+            else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
+                let p = document.getElementById("Linear-SVM");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                console.log(comparison);
+                console.log("clone node was called");
+                comparison = p_prime;
+                console.log(comparison);
             }
         }
         function parseData(data) {
