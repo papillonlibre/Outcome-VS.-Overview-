@@ -651,8 +651,12 @@
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 console.log(comparison);
-                console.log("clone node was called");
-                comparison = p_prime;
+                //console.log("clone node was called");
+                //comparison = p_prime;
+                comparison = document.getElementById('dataset-svg').appendChild(p_prime);
+
+                //document.getElementById('dataset-svg').replaceChild(comparison, document.getElementById('dataset-svg'));
+                //svg.removeChild(document.getElementById('dataset-svg'));
                 console.log(comparison);
             }
             else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
@@ -660,8 +664,9 @@
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 console.log(comparison);
-                console.log("clone node was called");
-                comparison = p_prime;
+                //console.log("clone node was called");
+                //comparison = p_prime;
+                comparison = document.getElementById('dataset-svg').appendChild(p_prime);
                 console.log(comparison);
             }
         }
