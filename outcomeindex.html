@@ -617,8 +617,6 @@
                         }
 
                     })
-	      			     
-			      	
                     .attr('class', 'model-li')
                     .attr('id', (d) => d.replace(/ /g,"-"))
                     .html((d) => '<h2>' + d + '</h2>')
@@ -634,41 +632,90 @@
 
         function updateData(){
             var ID = getID();
-            console.log ("ID:" + ID);
+            //console.log ("ID:" + ID);
             if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
                 // backend deep copy of the element
                 let p = document.getElementById("Nearest-Neighbors");
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
-
-                //VERSION INVOLVING REMOVING THE CHILD TO FIX THE APPEND ISSUE
-                    // NO LONGER IN USE
-
-                //comparison.parentNode.removeChild(document.getElementById('dataset-svg'));
-                //comparison.appendChild(p_prime);
-
-                console.log(comparison.parentNode);
-                // ATTEMPTS TO REMOVE THE PARENTNODE PROBLEM BY ADDING IT PREEMPTIVELY TO THE DOM
-                comparison.parentNode.appendChild(p_prime);
-               
-
-                //comparison = comparison.parentNode.replaceChild(p_prime, comparison);
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
-                 
+                p_prime.id = "dataset-svg";
 
-                //comparison.parentNode = document.getElementById("dataset-svg");
-                //console.log(comparison.id);
-                
             }
             else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
                 let p = document.getElementById("Linear-SVM");
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
-                //comparison.appendChild(p_prime);
-                comparison = comparison.parentNode.replaceChild(p_prime, comparison);
-                //console.log(comparison);
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
             }
+            else if (ID == "RBF-SVM" || ID == "model-confusion-matrix-RBF-SVM" ){
+                let p = document.getElementById("RBF-SVM");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Gaussian-Process" || ID == "model-confusion-matrix-Gaussian-Process" ){
+                let p = document.getElementById("Gaussian-Process");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Decision-Tree" || ID == "model-confusion-matrix-Decision-Tree" ){
+                let p = document.getElementById("Decision-Tree");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Random-Forest" || ID == "model-confusion-matrix-Random-Forest" ){
+                let p = document.getElementById("Random-Forest");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Neural-Net" || ID == "model-confusion-matrix-Neural-Net" ){
+                let p = document.getElementById("Neural-Net");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "AdaBoost" || ID == "model-confusion-matrix-AdaBoost" ){
+                let p = document.getElementById("AdaBoost");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Naive-Bayes" || ID == "model-confusion-matrix-Naive-Bayes" ){
+                let p = document.getElementById("Naive-Bayes");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "QDA" || ID == "model-confusion-matrix-QDA" ){
+                let p = document.getElementById("QDA");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            
         }
         function parseData(data) {
             // We need to add some random jitter because there are so few points
