@@ -587,42 +587,33 @@
         }
 
         function initializeModels() {
-            // console.log("initializing models, there should be data ", Object.keys(predictionData))
+            // controller variable for checking states
             var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        //console.log("lightsOn == " + lightsOn);
+                        // case where lights are off and need to become on
                         if (lightsOn == false){
-                            //d3.select(this)
-	    						//.style("color", "brown")
                                 var elementColor = d3.select(this).style("border-color");
-                                //console.log("elementColor: " + elementColor);
-                                //console.log("I have reached the lightsOn == false case");
+                                // if old color is initialized, change to new color
+                                // change lightsOn to true and updateData
                                 if (elementColor == 'rgb(198, 214, 230)') {
-                                    //console.log("I have reached the inner if");
                                     d3.select(this).style("border-color", "#00008b")
                                     lightsOn = true;
                                     updateData();
                                 }
-                                
-                                //console.log("lightsOn == " + lightsOn);
                         }
-                        else{                                
-		                         //.style("color", "black");
-                                 //console.log("I have reached the lightsOn == true case");
-                                 
+                        // case where lightsOn true, no new lights should be lit
+                        else{
                                  var elementColor2 = d3.select(this).style("border-color");
-                                 //console.log("elementColor: " + elementColor2);
+                                 // if elementColor is selectedColor, then return to 
+                                 //unlit state, set lightsOn to false
                                  if (elementColor2 == 'rgb(0, 0, 139)') {
-                                    //console.log("reached inner if statement");
                                     d3.select(this).style("border-color", "#c6d6e6")
                                     lightsOn = false;
                                 }
-                                //console.log("lightsOn == " + lightsOn);
-                                 
                         }
 
                     })
@@ -644,30 +635,39 @@
         function updateData(){
             var ID = getID();
             console.log ("ID:" + ID);
-            //console.log("Updating.....");
-            //buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'])
             if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
+                // backend deep copy of the element
                 let p = document.getElementById("Nearest-Neighbors");
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
-                console.log(comparison);
-                //console.log("clone node was called");
-                //comparison = p_prime;
-                comparison = document.getElementById('dataset-svg').appendChild(p_prime);
 
-                //document.getElementById('dataset-svg').replaceChild(comparison, document.getElementById('dataset-svg'));
-                //svg.removeChild(document.getElementById('dataset-svg'));
-                console.log(comparison);
+                //VERSION INVOLVING REMOVING THE CHILD TO FIX THE APPEND ISSUE
+                    // NO LONGER IN USE
+
+                //comparison.parentNode.removeChild(document.getElementById('dataset-svg'));
+                //comparison.appendChild(p_prime);
+
+                console.log(comparison.parentNode);
+                // ATTEMPTS TO REMOVE THE PARENTNODE PROBLEM BY ADDING IT PREEMPTIVELY TO THE DOM
+                comparison.parentNode.appendChild(p_prime);
+               
+
+                //comparison = comparison.parentNode.replaceChild(p_prime, comparison);
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                 
+
+                //comparison.parentNode = document.getElementById("dataset-svg");
+                //console.log(comparison.id);
+                
             }
             else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
                 let p = document.getElementById("Linear-SVM");
                 let p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
-                console.log(comparison);
-                //console.log("clone node was called");
-                //comparison = p_prime;
-                comparison = document.getElementById('dataset-svg').appendChild(p_prime);
-                console.log(comparison);
+                //comparison.appendChild(p_prime);
+                comparison = comparison.parentNode.replaceChild(p_prime, comparison);
+                //console.log(comparison);
             }
         }
         function parseData(data) {
