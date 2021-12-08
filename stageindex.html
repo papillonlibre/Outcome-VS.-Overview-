@@ -5,114 +5,110 @@
 	<h1><center>Welcome to Model Selection (Stage First)</center></h1>
         
     <style>
-    .axis {
-      font: 10px sans-serif; /*the font of the axis*/
-    }
-    .axis path,
-    .axis line {
-      fill: none; /*The axis filler*/
-      fill-rule: nonzero;
-      stroke: #000; /*The stroke is the shadow of the line.*/
-      /*shape-rendering: crispEdges;*/
-    }
-    .container {
-      padding: 20px; 
-      display: grid;
-      grid-gap: 20px; /*the distance between graph and models*/
-      grid-template-columns: 25%; /*the length for the left bars*/
-    }
-    .dataset-container {
-        grid-column: 1 / 1;
-        position: fixed;
-        width: 30%;
-        left: 0;
-        bottom: 0;
-    }
-    .models-container {
-        grid-column: 2 / 2;
-    }
-    .models-container ul {
-        display: grid;
-        grid-gap: 20px;
-        grid-template-columns: 30% 30% 30%; /*each represent one column*/
-        list-style-type: none;
-    }
-    .model-confusion-matrix {
-    	text-align: center;
-        padding: 10px; /*The distance between model image and confusion matrix*/
-    }
-    .model-li {
-    	text-align: center;
-        padding: 15px; /*the gap between model border and model image*/
-        border-radius: 50px;
-        border-color: #c6d6e6;
-        border-style: solid;
-        border-width: 10px; /*the width of the model's' border*/
-    }
-    .confusion-matrix-table td {
-        text-align: center;
-        font: 12px sans-serif;
-        border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
-        width: 120px;
-    }
+        .axis {
+          font: 10px sans-serif; /*the font of the axis*/
+        }
+        .axis path,
+        .axis line {
+          fill: none; /*The axis filler*/
+          fill-rule: nonzero;
+          stroke: #000; /*The stroke is the shadow of the line.*/
+          /*shape-rendering: crispEdges;*/
+        }
+        .container {
+          padding: 5px;
+          display: grid;
+          margin: auto;
+          grid-gap: 20px; /*the distance between graph and models*/
+          grid-template-columns: 25%; /*the length for the left bars*/
+        }
 
-    .confusion-matrix-table td.innerMatrix {
-    	color: black;
-    	text-align: center;
-        font-weight: 700;
-    }
-	
-	/*tooltip for mouse touching on the points*/
-    div.tooltip {   
-        position: absolute;         
-        text-align: left;
-        width: 120px;                    
-        height: 88px;                   
-        padding: 2px;            
-        padding-left: 15px;         
-        font: 12px sans-serif;      
-        background: lightsteelblue; 
-        border: 0px;        
-        border-radius: 8px;         
-        pointer-events: none;         
-    }
-
-    path {
-        pointer-events: all;
-    }
-	
-	h1 {
-            background-color: black;
-            color: white;
+        .models-container {
+            grid-column: 2 / 2;
+        }
+        .models-container ul {
+            display: grid;
+            grid-gap: 20px;
+            grid-template-columns: 30% 30% 30%; /*each represent one column*/
+            list-style-type: none;
+        }
+        .model-confusion-matrix {
             text-align: center;
-            padding: 5px;
+            padding: 10px; /*The distance between model image and confusion matrix*/
+            width: 90%;
         }
-    </style>
-</head>
-
-<style>
-        head {
-            background-color: black;
-            color: white;
+        .model-li {
             text-align: center;
-            padding: 5px;
+            padding: 15px; /*the gap between model border and model image*/
+            border-radius: 50px;
+            border-color: #c6d6e6;
+            border-style: solid;
+            border-width: 10px; /*the width of the model's' border*/
         }
-
-        #body {
-            width: 1000px;
-            float: center;
-            padding: 10px;
-        }
-
-        #footer {
-            background-color: black;
-            color: white;
-            clear: both;
+        .confusion-matrix-table td {
             text-align: center;
-            padding: 15px;
+            font: 12px sans-serif;
+            border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+            width: 120px;
         }
-</style>
     
+        .confusion-matrix-table td.innerMatrix {
+            color: black;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        /*tooltip for mouse touching on the points*/
+        div.tooltip {   
+            position: absolute;         
+            text-align: left;
+            width: 120px;                    
+            height: 88px;                   
+            padding: 2px;            
+            padding-left: 15px;         
+            font: 12px sans-serif;      
+            background: lightsteelblue; 
+            border: 0px;        
+            border-radius: 8px;         
+            pointer-events: none;         
+        }
+    
+        path {
+            pointer-events: all;
+        }
+
+        h1 {
+                background-color: black;
+                color: white;
+                text-align: center;
+                
+            }
+        </style>
+    </head>
+
+    <style>
+            head {
+                background-color: black;
+                color: white;
+                text-align: center;
+                padding: 5px;
+            }
+
+            #body {
+                width: 100%;
+                float: center;
+                padding: 10px;
+            }
+
+            #footer {
+                background-color: black;
+                color: white;
+                clear: both;
+                text-align: center;
+                padding: 15px;
+            }
+    </style>
+
 <body>
 	<div>
 	<center>
@@ -122,36 +118,19 @@
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
 	
-	
        <!-- The places where we can add click on models -->
        <div class = 'container'>
-            <!-- <div class='dataset-container'>
-                <div class='svg-container' id='dataset-svg' >
-            </div> -->
-                <!-- <div class='data-control-container' >
-                    <p>
-                        X-axis: 
-                        <select name="x-axis" id="x-axis-select" >
-                        </select>
-                    </p>
-                    <p>
-                        Y-axis:
-                        <select name="y-axis" id="y-axis-select" >
-                        </select>
-                    </p> -->
-                    </p>
-                    <p> Dimensionality Reduction Techniques for Data Visualization:
-                    </p>
-                </div>
-                <div class='data-control-container' id='projection-select'>
-                </div>
+            <p> <center>Dimensionality Reduction Techniques for Data Visualization:
+            </center> </p>
+            <div class='data-control-container' id='projection-select'>
             </div>
-            <div class='models-container' >
-                <ul>
-                </ul>
-            </div>
-        </center>
         
+        <div class='models-container' >
+            <ul>
+            </ul>
+        </div>
+        </center>
+
         </div>
 
 
@@ -646,15 +625,14 @@
             var ID = getID();
             console.log ("ID:" + ID);
             //console.log("Updating.....");
-            buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'])
-            
+            //buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'])
+            if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
+                let p = document.getElementById("Nearest Neighbors");
+                let p_prime = p.cloneNode(deep);
+            } 
 
         }
 
-        function getTT () {
-            var ID = getID();
-            
-        }
         function parseData(data) {
             // We need to add some random jitter because there are so few points
             epsilon = 0.4
@@ -689,7 +667,6 @@
             // Render the data svg
             buildScatterPlot('#dataset-svg', scatterplotData, [], predictionData['ground_truth'])
             
-
             modelContainers.forEach((c) => { buildScatterPlot('#' + c.replace(/ /g,"-"), scatterplotData, predictionData[c], predictionData['ground_truth'], happinessData) } );
         }
 
