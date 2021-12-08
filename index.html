@@ -3,7 +3,7 @@
 <head>
 	<h1><center>Welcome to Model Selection (Overview First)</center></h1>
         
-    <style>
+        <style>
     .axis {
       font: 10px sans-serif; /*the font of the axis*/
     }
@@ -22,23 +22,34 @@
     }
     .dataset-container {
         grid-column: 1 / 1;
+        position: fixed;
+        width: 25%;
+        padding-top: 80%;
+        left: 0.5%;
+        bottom: 0;
     }
     .models-container {
         grid-column: 2 / 2;
+        width: 95%;
+    }
+    .svg-container {
+        width: 90%;
     }
     .models-container ul {
         display: grid;
         grid-gap: 20px;
-        grid-template-columns: 30% 30% 30%; /*each represent one column*/
-        list-style-type: none;        
+        grid-template-columns: 35% 35% 35%; /*each represent one column*/
+        list-style-type: none;
+        
     }
     .model-confusion-matrix {
     	text-align: center;
         padding: 10px; /*The distance between model image and confusion matrix*/
+        width: 90%;
     }
     .model-li {
     	text-align: center;
-        padding: 15px; /*the gap between model border and model image*/
+        padding: 2px; /*the gap between model border and model image*/
         border-radius: 50px;
         border-color: #c6d6e6;
         border-style: solid;
