@@ -16,26 +16,27 @@
           /*shape-rendering: crispEdges;*/
         }
         .container {
-          padding: 5px;
           display: grid;
-          margin: auto;
+          padding: 20px;
           grid-gap: 20px; /*the distance between graph and models*/
           grid-template-columns: 25%; /*the length for the left bars*/
         }
 
         .models-container {
             grid-column: 2 / 2;
+
         }
         .models-container ul {
             display: grid;
             grid-gap: 20px;
             grid-template-columns: 30% 30% 30%; /*each represent one column*/
             list-style-type: none;
+            width: 100%;
         }
         .model-confusion-matrix {
             text-align: center;
             padding: 10px; /*The distance between model image and confusion matrix*/
-            width: 90%;
+            width: 80%;
         }
         .model-li {
             text-align: center;
@@ -96,6 +97,7 @@
 
             #body {
                 width: 100%;
+                height: 100%;
                 float: center;
                 padding: 10px;
             }
@@ -118,19 +120,23 @@
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
 	
-       <!-- The places where we can add click on models -->
-       <div class = 'container'>
-            <p> <center>Dimensionality Reduction Techniques for Data Visualization:
-            </center> </p>
-            <div class='data-control-container' id='projection-select'>
+        <!-- The places where we can add click on models -->
+        <div class = 'container'>
+                <div class='data-control-container'>
+                    <center>
+                    <p> <center> Dimensionality Reduction Techniques for Data Visualization: </center>
+                </div>
+                <div class='data-control-container' id='projection-select'>
+                    <center></center>
+                </div>
+            </center>
             </div>
-        
-        <div class='models-container' >
-            <ul>
-            </ul>
-        </div>
+            <div class='models-container' >
+                <ul>
+                </ul>
+            </div>
         </center>
-
+        
         </div>
 
 
