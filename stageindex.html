@@ -645,7 +645,6 @@
                         .append('div')
                         .attr('class', 'model-confusion-matrix')
                         .attr('id', (d) => 'model-confusion-matrix-' + d.replace(/ /g,"-"))
-
             return Object.keys(predictionData)
         }
 
@@ -806,7 +805,7 @@
             removeFourth();
             //appends desired models to stage
             parentNode.appendChild(p10);
-            b1.style.display = "none";
+            b1.style.display = "block";
             b3.style.display = "block";
             b4.style.display = "none";
             b2.style.display = "none";
@@ -876,11 +875,6 @@
 
         function drawConfusionMatrices(modelContainers) {
             modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
-        }
-        function reOrderScatterPlots() {
-            // need to split them up 
-            // need to create new buttons
-            // need to call it in redraw
         }
 
     </script>
