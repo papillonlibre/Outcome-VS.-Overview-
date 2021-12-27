@@ -48,6 +48,7 @@
         padding: 10px; /*The distance between model image and confusion matrix*/
         width: 90%;
         }
+        
         .model-li {
         text-align: center;
         padding: 2px; /*the gap between model border and model image*/
@@ -62,9 +63,7 @@
         border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
         width: 10%;
         }
-        .button-container {
-        right: 90%;
-        }
+        
     
         .confusion-matrix-table td.innerMatrix {
         color: black;
@@ -163,10 +162,14 @@
                 <ul>
                 </ul>
                 <div class='button-container' id='projection-select'>
-                    <li><a type="button" id="first" onclick="firstStage();" href="javascript:void(0);" style="display:none;"style="display:none;">First Stage</a></li>
-                    <li><a type="button" id="second" onclick="secondStage();" href="javascript:void(0);">Second Stage</a></li>
-                    <li><a type="button" id="third" onclick="thirdStage();" href="javascript:void(0);" style="display:none;">Third Stage</a></li>
-                    <li><a type="button" id="fourth" onclick="fourthStage();" href="javascript:void(0);" style="display:none;">Fourth Stage</a></li>
+                    <center>
+                    <ul style = "list-style: none;">
+                    <li><button type="button" id="first" onclick="firstStage();" href="javascript:void(0);" style="display:none;" > First Stage</button></li>
+                    <li><button type="button" id="second" onclick="secondStage();" href="javascript:void(0);" style="background-color:#c6d6e6;">Second Stage</button></li>
+                    <li><button type="button" id="third" onclick="thirdStage();" href="javascript:void(0);" style="display:none;">Third Stage</button></li>
+                    <li><button type="button" id="fourth" onclick="fourthStage();" href="javascript:void(0);" style="display:none;">Fourth Stage</button></li>
+                    </center>    
+                    </ul>
                 </div>
             </div>
             
@@ -626,34 +629,21 @@
         }
 
         function initializeModels() {
-            // controller variable for checking states
-            var lightsOn = false;
+            // controller variable for checking state
+
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        // case where lights are off and need to become on
-                        if (lightsOn == false){
-                                var elementColor = d3.select(this).style("border-color");
-                                // if old color is initialized, change to new color
-                                // change lightsOn to true and updateData
-                                if (elementColor == 'rgb(198, 214, 230)') {
-                                    d3.select(this).style("border-color", "#00008b")
-                                    lightsOn = true;
-                                    updateData();
-                                }
-                        }
-                        // case where lightsOn true, no new lights should be lit
-                        else{
-                                 var elementColor2 = d3.select(this).style("border-color");
-                                 // if elementColor is selectedColor, then return to 
-                                 //unlit state, set lightsOn to false
-                                 if (elementColor2 == 'rgb(0, 0, 139)') {
-                                    d3.select(this).style("border-color", "#c6d6e6")
-                                    lightsOn = false;
-                                }
-                        }
+                    var elementColor = d3.select(this).style("border-color");
+                    // if old color is initialized, change to new color
+                    // change lightsOn to true and updateData
+                    if (elementColor == 'rgb(198, 214, 230)') {
+                        d3.select(this).style("border-color", "#00008b")
+                        updateData();
+                        d3.select(this).style("border-color", "#c6d6e6");
+                    }
 
                     })
                     .attr('class', 'model-li')
@@ -781,7 +771,9 @@
             parentNode.appendChild(p5);
             parentNode.appendChild(p6);
             b1.style.display = "block";
+            b1.style.backgroundColor = "#c6d6e6";
             b3.style.display = "block";
+            b3.style.backgroundColor = "#c6d6e6";
             b4.style.display = "none";
             b2.style.display = "none";
         }
@@ -797,7 +789,9 @@
             b1.style.display = "none";
             b3.style.display = "none";
             b4.style.display = "block";
+            b4.style.backgroundColor = "#c6d6e6";
             b2.style.display = "block";
+            b2.style.backgroundColor = "#c6d6e6";
         }
         function fourthStage () {
             //resets data of parentNode "UL"
@@ -806,8 +800,9 @@
             removeThird();
             //appends desired models to stage
             parentNode.appendChild(p10);
-            b1.style.display = "block";
+            b1.style.display = "none";
             b3.style.display = "block";
+            b3.style.backgroundColor = "#c6d6e6";
             b4.style.display = "none";
             b2.style.display = "none";
         }
