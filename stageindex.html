@@ -2,7 +2,6 @@
 <meta charset="utf-8">
 
 <head>
-	<h1><center>HamletEye: Welcome to Model Selection (Stage First)</center></h1>
         
     <style>
         .axis {
@@ -16,77 +15,90 @@
           /*shape-rendering: crispEdges;*/
         }
         .container {
-          display: table;
-          padding: 20px;
+          padding: 20px; 
+          display: grid;
           grid-gap: 20px; /*the distance between graph and models*/
           grid-template-columns: 25%; /*the length for the left bars*/
         }
-
+        .dataset-container {
+            grid-column: 1 / 1;
+            position: fixed;
+            width: 25%;
+            padding-top: 80%;
+            left: 0.5%;
+            bottom: 0;
+            
+        }
         .models-container {
             grid-column: 2 / 2;
-
+            width: 95%;
+        }
+        .svg-container {
+            width: 90%;
         }
         .models-container ul {
-            display: grid;
-            grid-gap: 20px;
-            grid-template-columns: 30% 30% 30%; /*each represent one column*/
-            list-style-type: none;
-            width: 100%;
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: 35% 35% 35%; /*each represent one column*/
+        list-style-type: none;
+
         }
         .model-confusion-matrix {
-            text-align: center;
-            padding: 10px; /*The distance between model image and confusion matrix*/
-            width: 80%;
+        text-align: center;
+        padding: 10px; /*The distance between model image and confusion matrix*/
+        width: 90%;
         }
         .model-li {
-            text-align: center;
-            padding: 15px; /*the gap between model border and model image*/
-            border-radius: 50px;
-            border-color: #c6d6e6;
-            border-style: solid;
-            border-width: 10px; /*the width of the model's' border*/
+        text-align: center;
+        padding: 2px; /*the gap between model border and model image*/
+        border-radius: 50px;
+        border-color: #c6d6e6;
+        border-style: solid;
+        border-width: 10px; /*the width of the model's' border*/
         }
         .confusion-matrix-table td {
-            text-align: center;
-            font: 12px sans-serif;
-            border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
-            width: 120px;
+        text-align: center;
+        font: 12px sans-serif;
+        border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+        width: 10%;
         }
     
         .confusion-matrix-table td.innerMatrix {
-            color: black;
-            text-align: center;
-            font-weight: 700;
+        color: black;
+        text-align: center;
+        font-weight: 700;
         }
         
         /*tooltip for mouse touching on the points*/
         div.tooltip {   
-            position: absolute;         
-            text-align: left;
-            width: 120px;                    
-            height: 88px;                   
-            padding: 2px;            
-            padding-left: 15px;         
-            font: 12px sans-serif;      
-            background: lightsteelblue; 
-            border: 0px;        
-            border-radius: 8px;         
-            pointer-events: none;         
+        position: absolute;         
+        text-align: left;
+        width: 120px;                    
+        height: 88px;                   
+        padding: 2px;            
+        padding-left: 15px;         
+        font: 12px sans-serif;      
+        background: lightsteelblue; 
+        border: 0px;        
+        border-radius: 8px;         
+        pointer-events: none;         
         }
     
         path {
             pointer-events: all;
         }
-
+        
         h1 {
-                background-color: black;
-                color: white;
-                text-align: center;
-                
-            }
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 5px;
+        width: 100%;
+        top: 0px;
+        }
         </style>
     </head>
-
+    
     <style>
             head {
                 background-color: black;
@@ -94,14 +106,13 @@
                 text-align: center;
                 padding: 5px;
             }
-
+    
             #body {
                 width: 100%;
-                height: 100%;
                 float: center;
                 padding: 10px;
             }
-
+    
             #footer {
                 background-color: black;
                 color: white;
@@ -113,6 +124,7 @@
 
 <body>
 	<div>
+    <h1><center>HamletEye: Welcome to Model Selection (Stage First)</center></h1>
 	<center>
 	<h2>Please select the Model Selection Methods below</h2>
 	<link rel="stylesheet" href="index.css">
@@ -120,16 +132,29 @@
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
 	
-        <!-- The places where we can add click on models -->
-        <div class = 'container'>
+	
+       <!-- The places where we can add click on models -->
+       <div class = 'container'>
+            <div class='dataset-container'>
+                <div class='svg-container' id='dataset-svg' >
+            </div>
                 <div class='data-control-container'>
-                    <center>
-                    <p> <center> Dimensionality Reduction Techniques for Data Visualization: </center>
+                    <p>
+                        X-axis: 
+                        <select name="x-axis" id="x-axis-select" >
+                        </select>
+                    </p>
+                    <p>
+                        Y-axis:
+                        <select name="y-axis" id="y-axis-select" >
+                        </select>
+                    </p>
+                    </p>
+                    <p> Dimensionality Reduction Techniques for Data Visualization:
+                    </p>
                 </div>
                 <div class='data-control-container' id='projection-select'>
-                    <center></center>
                 </div>
-            </center>
             </div>
             <div class='models-container' >
                 <ul>
@@ -138,6 +163,7 @@
         </center>
         
         </div>
+
 
 
     <script src="./d3.min.js"></script>
@@ -572,47 +598,36 @@
         }
 
         function initializeModels() {
-            // console.log("initializing models, there should be data ", Object.keys(predictionData))
+            // controller variable for checking states
             var lightsOn = false;
             d3.select('.models-container ul')
                 .selectAll('li')
                 .data(Object.keys(predictionData).filter((k) => k !== 'ground_truth')).enter()
                     .append('li')
 	                .on("click", function(){
-                        //console.log("lightsOn == " + lightsOn);
+                        // case where lights are off and need to become on
                         if (lightsOn == false){
-                            //d3.select(this)
-	    						//.style("color", "brown")
                                 var elementColor = d3.select(this).style("border-color");
-                                //console.log("elementColor: " + elementColor);
-                                //console.log("I have reached the lightsOn == false case");
+                                // if old color is initialized, change to new color
+                                // change lightsOn to true and updateData
                                 if (elementColor == 'rgb(198, 214, 230)') {
-                                    //console.log("I have reached the inner if");
                                     d3.select(this).style("border-color", "#00008b")
                                     lightsOn = true;
-                                    updateData();
+                                    initializer();
                                 }
-                                
-                                //console.log("lightsOn == " + lightsOn);
                         }
-                        else{                                
-		                         //.style("color", "black");
-                                 //console.log("I have reached the lightsOn == true case");
-                                 
+                        // case where lightsOn true, no new lights should be lit
+                        else{
                                  var elementColor2 = d3.select(this).style("border-color");
-                                 //console.log("elementColor: " + elementColor2);
+                                 // if elementColor is selectedColor, then return to 
+                                 //unlit state, set lightsOn to false
                                  if (elementColor2 == 'rgb(0, 0, 139)') {
-                                    //console.log("reached inner if statement");
                                     d3.select(this).style("border-color", "#c6d6e6")
                                     lightsOn = false;
                                 }
-                                //console.log("lightsOn == " + lightsOn);
-                                 
                         }
 
                     })
-	      			     
-			      	
                     .attr('class', 'model-li')
                     .attr('id', (d) => d.replace(/ /g,"-"))
                     .html((d) => '<h2>' + d + '</h2>')
@@ -626,17 +641,45 @@
         function getID() {
             return event.srcElement.id;
         }
+        function initializer() {
+            // removeFirst();
+            removeSecond();
+            removeThird();
+            removeFourth();
+        }
+        function removeFirst(){
+            // removes first row
+            let p = document.getElementById("Nearest-Neighbors");
+            let p_prime = p.remove();
+            let p2 = document.getElementById("Linear-SVM");
+            let p_prime2 = p2.remove();
+            let p3 = document.getElementById("RBF-SVM");
+            let p_prime3 = p3.remove();
+        }
 
-        function updateData(){
-            var ID = getID();
-            console.log ("ID:" + ID);
-            //console.log("Updating.....");
-            //buildScatterPlot('#dataset-svg.svg-container', parseData(happinessData), [], predictionData['ground_truth'])
-            if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
-                let p = document.getElementById("Nearest Neighbors");
-                let p_prime = p.cloneNode(deep);
-            } 
+        function removeSecond(){
+            // removes second row
+            let p4 = document.getElementById("Gaussian-Process");
+            let p_prime4 = p4.remove();
+            let p5 = document.getElementById("Decision-Tree");
+            let p_prime5 = p5.remove();
+            let p6 = document.getElementById("Random-Forest");
+            let p_prime6 = p6.remove();
 
+        }
+        function removeThird() {
+            // removes third row
+            let p7 = document.getElementById("Neural-Net");
+            let p_prime7 = p7.remove();
+            let p8 = document.getElementById("AdaBoost");
+            let p_prime8 = p8.remove();
+            let p9 = document.getElementById("Naive-Bayes");
+            let p_prime9 = p9.remove();
+}
+        function removeFourth() {
+            // removes single elem in fourth row
+            let p10 = document.getElementById("QDA");
+            let p_prime10 = p10.remove();
         }
 
         function parseData(data) {
