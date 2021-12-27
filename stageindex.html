@@ -232,12 +232,30 @@
         var selectionArrayTN = [];
         var selectionArrayFP = [];
         var selectionArrayFN = [];
+        
 
         initializeProjections()
         initializeDimensions()
         var modelContainers = initializeModels();
         redrawScatterplots(modelContainers);
         drawConfusionMatrices(modelContainers);
+        // defines elems for global function use
+        let parentNode = document.getElementById("Nearest-Neighbors").parentNode;
+        let p = document.getElementById("Nearest-Neighbors");
+        let p2 = document.getElementById("Linear-SVM");
+        let p3 = document.getElementById("RBF-SVM");
+        let p4 = document.getElementById("Gaussian-Process");
+        let p5 = document.getElementById("Decision-Tree");
+        let p6 = document.getElementById("Random-Forest");
+        let p7 = document.getElementById("Neural-Net");
+        let p8 = document.getElementById("AdaBoost");
+        let p9 = document.getElementById("Naive-Bayes");
+        let p10 = document.getElementById("QDA");
+        let b1 = document.getElementById("first");
+        let b2 = document.getElementById("second");
+        let b3 = document.getElementById("third");
+        let b4 = document.getElementById("fourth");
+        firstStage();
 
         /* SCATTERPLOT CODE - YOU WILL NEED TO CHANGE THIS */
         function buildScatterPlot(containerElement, data, modelPredictions, groundTruth) {
@@ -624,7 +642,6 @@
                                     d3.select(this).style("border-color", "#00008b")
                                     lightsOn = true;
                                     updateData();
-                                    firstStage();
                                 }
                         }
                         // case where lightsOn true, no new lights should be lit
@@ -739,22 +756,6 @@
             }
             
         }
-        // defines elems for global function use
-        let parentNode = document.getElementById("Nearest-Neighbors").parentNode;
-        let p = document.getElementById("Nearest-Neighbors");
-        let p2 = document.getElementById("Linear-SVM");
-        let p3 = document.getElementById("RBF-SVM");
-        let p4 = document.getElementById("Gaussian-Process");
-        let p5 = document.getElementById("Decision-Tree");
-        let p6 = document.getElementById("Random-Forest");
-        let p7 = document.getElementById("Neural-Net");
-        let p8 = document.getElementById("AdaBoost");
-        let p9 = document.getElementById("Naive-Bayes");
-        let p10 = document.getElementById("QDA");
-        let b1 = document.getElementById("first");
-        let b2 = document.getElementById("second");
-        let b3 = document.getElementById("third");
-        let b4 = document.getElementById("fourth");
 
         function firstStage() {
             //resets data of parentNode "UL"
@@ -875,6 +876,7 @@
 
         function drawConfusionMatrices(modelContainers) {
             modelContainers.forEach((c) => { buildConfusionMatrix('#model-confusion-matrix-' + c.replace(/ /g,"-"), predictionData['ground_truth'], predictionData[c] ) });
+        
         }
 
     </script>
