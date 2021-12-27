@@ -163,7 +163,10 @@
                 <ul>
                 </ul>
                 <div class='button-container' id='projection-select'>
-                    <li><a onclick="secondStage();" href="javascript:void(0);">Second Stage</a></li>
+                    <li><a type="button" id="first" onclick="firstStage();" href="javascript:void(0);" style="display:none;"style="display:none;">First Stage</a></li>
+                    <li><a type="button" id="second" onclick="secondStage();" href="javascript:void(0);">Second Stage</a></li>
+                    <li><a type="button" id="third" onclick="thirdStage();" href="javascript:void(0);" style="display:none;">Third Stage</a></li>
+                    <li><a type="button" id="fourth" onclick="fourthStage();" href="javascript:void(0);" style="display:none;">Fourth Stage</a></li>
                 </div>
             </div>
             
@@ -749,6 +752,10 @@
         let p8 = document.getElementById("AdaBoost");
         let p9 = document.getElementById("Naive-Bayes");
         let p10 = document.getElementById("QDA");
+        let b1 = document.getElementById("first");
+        let b2 = document.getElementById("second");
+        let b3 = document.getElementById("third");
+        let b4 = document.getElementById("fourth");
 
         function firstStage() {
             //resets data of parentNode "UL"
@@ -759,6 +766,10 @@
             parentNode.appendChild(p);
             parentNode.appendChild(p2);
             parentNode.appendChild(p3);
+            b1.style.display = "none";
+            b3.style.display = "none";
+            b4.style.display = "none";
+            b2.style.display = "block";
         }
         function secondStage() {
             //resets data of parentNode "UL"
@@ -769,6 +780,10 @@
             parentNode.appendChild(p4);
             parentNode.appendChild(p5);
             parentNode.appendChild(p6);
+            b1.style.display = "block";
+            b3.style.display = "block";
+            b4.style.display = "none";
+            b2.style.display = "none";
         }
         function thirdStage() {
             //resets data of parentNode "UL"
@@ -779,6 +794,10 @@
             parentNode.appendChild(p6);
             parentNode.appendChild(p8);
             parentNode.appendChild(p9);
+            b1.style.display = "none";
+            b3.style.display = "none";
+            b4.style.display = "block";
+            b2.style.display = "block";
         }
         function fourthStage () {
             //resets data of parentNode "UL"
@@ -787,7 +806,36 @@
             removeFourth();
             //appends desired models to stage
             parentNode.appendChild(p10);
+            b1.style.display = "none";
+            b3.style.display = "block";
+            b4.style.display = "none";
+            b2.style.display = "none";
         }
+        function removeFirst(){
+            //removes first row
+            let p_prime = p.remove();
+            let p_prime2 = p2.remove();
+            let p_prime3 = p3.remove();
+        }
+
+        function removeSecond(){
+            // removes second row
+            let p_prime4 = p4.remove();
+            let p_prime5 = p5.remove();
+            let p_prime6 = p6.remove();
+
+        }
+        function removeThird() {
+            // removes third row
+            let p_prime7 = p7.remove();
+            let p_prime8 = p8.remove();
+            let p_prime9 = p9.remove();
+}
+        function removeFourth() {
+            // removes single elem in fourth row
+            let p_prime10 = p10.remove();
+        }
+
 
         function parseData(data) {
             // We need to add some random jitter because there are so few points
