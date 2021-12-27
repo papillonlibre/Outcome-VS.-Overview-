@@ -62,6 +62,9 @@
         border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
         width: 10%;
         }
+        .button-container {
+        right: 90%;
+        }
     
         .confusion-matrix-table td.innerMatrix {
         color: black;
@@ -159,7 +162,11 @@
             <div class='models-container' >
                 <ul>
                 </ul>
+                <div class='button-container' id='projection-select'>
+                    <li><a onclick="secondStage();" href="javascript:void(0);">Second Stage</a></li>
+                </div>
             </div>
+            
         </center>
         
         </div>
@@ -613,7 +620,8 @@
                                 if (elementColor == 'rgb(198, 214, 230)') {
                                     d3.select(this).style("border-color", "#00008b")
                                     lightsOn = true;
-                                    initializer();
+                                    updateData();
+                                    firstStage();
                                 }
                         }
                         // case where lightsOn true, no new lights should be lit
@@ -641,45 +649,144 @@
         function getID() {
             return event.srcElement.id;
         }
-        function initializer() {
-            // removeFirst();
+        function updateData(){
+            var ID = getID();
+            //console.log ("ID:" + ID);
+            if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
+                //backend deep copy of the element
+                let p = document.getElementById("Nearest-Neighbors");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+
+            }
+            else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
+                let p = document.getElementById("Linear-SVM");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "RBF-SVM" || ID == "model-confusion-matrix-RBF-SVM" ){
+                let p = document.getElementById("RBF-SVM");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Gaussian-Process" || ID == "model-confusion-matrix-Gaussian-Process" ){
+                let p = document.getElementById("Gaussian-Process");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Decision-Tree" || ID == "model-confusion-matrix-Decision-Tree" ){
+                let p = document.getElementById("Decision-Tree");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Random-Forest" || ID == "model-confusion-matrix-Random-Forest" ){
+                let p = document.getElementById("Random-Forest");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Neural-Net" || ID == "model-confusion-matrix-Neural-Net" ){
+                let p = document.getElementById("Neural-Net");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "AdaBoost" || ID == "model-confusion-matrix-AdaBoost" ){
+                let p = document.getElementById("AdaBoost");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            else if (ID == "Naive-Bayes" || ID == "model-confusion-matrix-Naive-Bayes" ){
+                let p = document.getElementById("Naive-Bayes");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+                
+            }
+            else if (ID == "QDA" || ID == "model-confusion-matrix-QDA" ){
+                let p = document.getElementById("QDA");
+                let p_prime = p.cloneNode(true);
+                var comparison = document.getElementById("dataset-svg");
+                comparison.replaceWith(p_prime);
+                console.log(comparison.parentNode);
+                p_prime.id = "dataset-svg";
+            }
+            
+        }
+        // defines elems for global function use
+        let parentNode = document.getElementById("Nearest-Neighbors").parentNode;
+        let p = document.getElementById("Nearest-Neighbors");
+        let p2 = document.getElementById("Linear-SVM");
+        let p3 = document.getElementById("RBF-SVM");
+        let p4 = document.getElementById("Gaussian-Process");
+        let p5 = document.getElementById("Decision-Tree");
+        let p6 = document.getElementById("Random-Forest");
+        let p7 = document.getElementById("Neural-Net");
+        let p8 = document.getElementById("AdaBoost");
+        let p9 = document.getElementById("Naive-Bayes");
+        let p10 = document.getElementById("QDA");
+
+        function firstStage() {
+            //resets data of parentNode "UL"
             removeSecond();
             removeThird();
             removeFourth();
+            //appends desired models to stage
+            parentNode.appendChild(p);
+            parentNode.appendChild(p2);
+            parentNode.appendChild(p3);
         }
-        function removeFirst(){
-            // removes first row
-            let p = document.getElementById("Nearest-Neighbors");
-            let p_prime = p.remove();
-            let p2 = document.getElementById("Linear-SVM");
-            let p_prime2 = p2.remove();
-            let p3 = document.getElementById("RBF-SVM");
-            let p_prime3 = p3.remove();
+        function secondStage() {
+            //resets data of parentNode "UL"
+            removeFirst();
+            removeThird();
+            removeFourth();
+            //appends desired models to stage
+            parentNode.appendChild(p4);
+            parentNode.appendChild(p5);
+            parentNode.appendChild(p6);
         }
-
-        function removeSecond(){
-            // removes second row
-            let p4 = document.getElementById("Gaussian-Process");
-            let p_prime4 = p4.remove();
-            let p5 = document.getElementById("Decision-Tree");
-            let p_prime5 = p5.remove();
-            let p6 = document.getElementById("Random-Forest");
-            let p_prime6 = p6.remove();
-
+        function thirdStage() {
+            //resets data of parentNode "UL"
+            removeSecond();
+            removeFirst();
+            removeFourth();
+            //appends desired models to stage
+            parentNode.appendChild(p6);
+            parentNode.appendChild(p8);
+            parentNode.appendChild(p9);
         }
-        function removeThird() {
-            // removes third row
-            let p7 = document.getElementById("Neural-Net");
-            let p_prime7 = p7.remove();
-            let p8 = document.getElementById("AdaBoost");
-            let p_prime8 = p8.remove();
-            let p9 = document.getElementById("Naive-Bayes");
-            let p_prime9 = p9.remove();
-}
-        function removeFourth() {
-            // removes single elem in fourth row
-            let p10 = document.getElementById("QDA");
-            let p_prime10 = p10.remove();
+        function fourthStage () {
+            //resets data of parentNode "UL"
+            removeFirst();
+            removeSecond();
+            removeFourth();
+            //appends desired models to stage
+            parentNode.appendChild(p10);
         }
 
         function parseData(data) {
