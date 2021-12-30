@@ -4,102 +4,101 @@
 <head>
         
     <style>
-        .axis {
-          font: 10px sans-serif; /*the font of the axis*/
-        }
-        .axis path,
-        .axis line {
-          fill: none; /*The axis filler*/
-          fill-rule: nonzero;
-          stroke: #000; /*The stroke is the shadow of the line.*/
-          /*shape-rendering: crispEdges;*/
-        }
-        .container {
-          padding: 20px; 
-          display: grid;
-          grid-gap: 20px; /*the distance between graph and models*/
-          grid-template-columns: 25%; /*the length for the left bars*/
-        }
-        .dataset-container {
-            grid-column: 1 / 1;
-            position: fixed;
-            width: 25%;
-            padding-top: 80%;
-            left: 0.5%;
-            bottom: 0;
-            
-        }
-        .models-container {
-            grid-column: 2 / 2;
-            width: 95%;
-        }
-        .svg-container {
-            width: 90%;
-        }
-        .models-container ul {
+    .axis {
+        font: 10px sans-serif; /*the font of the axis*/
+    }
+    .axis path,
+    .axis line {
+        fill: none; /*The axis filler*/
+        fill-rule: nonzero;
+        stroke: #000; /*The stroke is the shadow of the line.*/
+        /*shape-rendering: crispEdges;*/
+    }
+    .container {
+        padding: 20px; 
         display: grid;
-        grid-gap: 20px;
-        grid-template-columns: 35% 35% 35%; /*each represent one column*/
-        list-style-type: none;
-
-        }
-        .model-confusion-matrix {
-        text-align: center;
-        padding: 10px; /*The distance between model image and confusion matrix*/
+        grid-gap: 20px; /*the distance between graph and models*/
+        grid-template-columns: 25%; /*the length for the left bars*/
+    }
+    .dataset-container {
+        grid-column: 1 / 1;
+        position: fixed;
+        width: 25%;
+        padding-top: 80%;
+        left: 0.5%;
+        bottom: 0;
+        
+    }
+    .models-container {
+        grid-column: 2 / 2;
+        width: 95%;
+    }
+    .svg-container {
         width: 90%;
-        }
-        
-        .model-li {
-        text-align: center;
-        padding: 2px; /*the gap between model border and model image*/
-        border-radius: 50px;
-        border-color: #c6d6e6;
-        border-style: solid;
-        border-width: 10px; /*the width of the model's' border*/
-        }
-        .confusion-matrix-table td {
-        text-align: center;
-        font: 12px sans-serif;
-        border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
-        width: 10%;
-        }
-        
+    }
+    .models-container ul {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 35% 35% 35%; /*each represent one column*/
+    list-style-type: none;
+
+    }
+    .model-confusion-matrix {
+    text-align: center;
+    padding: 10px; /*The distance between model image and confusion matrix*/
+    width: 90%;
+    }
     
-        .confusion-matrix-table td.innerMatrix {
-        color: black;
-        text-align: center;
-        font-weight: 700;
-        }
-        
-        /*tooltip for mouse touching on the points*/
-        div.tooltip {   
-        position: absolute;         
-        text-align: left;
-        width: 120px;                    
-        height: 88px;                   
-        padding: 2px;            
-        padding-left: 15px;         
-        font: 12px sans-serif;      
-        background: lightsteelblue; 
-        border: 0px;        
-        border-radius: 8px;         
-        pointer-events: none;         
-        }
+    .model-li {
+    text-align: center;
+    padding: 2px; /*the gap between model border and model image*/
+    border-radius: 50px;
+    border-color: #c6d6e6;
+    border-style: solid;
+    border-width: 10px; /*the width of the model's' border*/
+    }
+    .confusion-matrix-table td {
+    text-align: center;
+    font: 12px sans-serif;
+    border: 0.1px solid gray; /*delete it if we do not need a grid for our confusion matrix*/
+    width: 10%;
+    } 
+
+    .confusion-matrix-table td.innerMatrix {
+    color: black;
+    text-align: center;
+    font-weight: 700;
+    }
     
-        path {
-            pointer-events: all;
-        }
-        
-        h1 {
-        background-color: black;
-        color: white;
-        text-align: center;
-        padding: 5px;
-        width: 100%;
-        top: 0px;
-        }
-        </style>
-    </head>
+    /*tooltip for mouse touching on the points*/
+    div.tooltip {   
+    position: absolute;         
+    text-align: left;
+    width: 120px;                    
+    height: 88px;                   
+    padding: 2px;            
+    padding-left: 15px;         
+    font: 12px sans-serif;      
+    background: lightsteelblue; 
+    border: 0px;        
+    border-radius: 8px;         
+    pointer-events: none;         
+    }
+
+    path {
+        pointer-events: all;
+    }
+    
+    h1 {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    top: 0px;
+    }
+    </style>
+</head>
     
     <style>
             head {
@@ -162,14 +161,18 @@
                 <ul>
                 </ul>
                 <div class='button-container' id='projection-select'>
+                    <h3> </h3>
                     <center>
                     <ul style = "list-style: none;">
-                    <li><button type="button" id="first" onclick="firstStage();" href="javascript:void(0);" style="display:none;" > First Stage</button></li>
-                    <li><button type="button" id="second" onclick="secondStage();" href="javascript:void(0);" style="background-color:#c6d6e6;">Second Stage</button></li>
-                    <li><button type="button" id="third" onclick="thirdStage();" href="javascript:void(0);" style="display:none;">Third Stage</button></li>
-                    <li><button type="button" id="fourth" onclick="fourthStage();" href="javascript:void(0);" style="display:none;">Fourth Stage</button></li>
+                    <button class="button" id="first" onclick="firstStage();" href="javascript:void(0);" style="display:none;" > First Stage</button>
+                    <button type="button" id="second" onclick="secondStage();" href="javascript:void(0);" style="background-color:#c6d6e6;">Second Stage</button>
+                    <button type="button" id="third" onclick="thirdStage();" href="javascript:void(0);" style="display:none;">Third Stage</button>
+                    <button type="button" id="fourth" onclick="fourthStage();" href="javascript:void(0);" style="display:none;">Fourth Stage</button>
+                    <button type="button" id="fifth" onclick="submitter();" href="javascript:void(0);" style="display:none;">Submit</button>
+                    <button type="button" id="sixth" onclick="firstStage();" href="javascript:void(0);" style="display:none;">Return</button>
                     </center>    
                     </ul>
+                    
                 </div>
             </div>
             
@@ -244,20 +247,22 @@
         drawConfusionMatrices(modelContainers);
         // defines elems for global function use
         let parentNode = document.getElementById("Nearest-Neighbors").parentNode;
-        let p = document.getElementById("Nearest-Neighbors");
-        let p2 = document.getElementById("Linear-SVM");
-        let p3 = document.getElementById("RBF-SVM");
-        let p4 = document.getElementById("Gaussian-Process");
-        let p5 = document.getElementById("Decision-Tree");
-        let p6 = document.getElementById("Random-Forest");
-        let p7 = document.getElementById("Neural-Net");
+        let p = document.getElementById("Linear-SVM");
+        let p2 = document.getElementById("Gaussian-Process");
+        let p3 = document.getElementById("Naive-Bayes");
+        let p4 = document.getElementById("Random-Forest");
+        let p5 = document.getElementById("Neural-Net");
+        let p6 = document.getElementById("QDA");
+        let p7 = document.getElementById("Decision-Tree");
         let p8 = document.getElementById("AdaBoost");
-        let p9 = document.getElementById("Naive-Bayes");
-        let p10 = document.getElementById("QDA");
+        let p9 = document.getElementById("RBF-SVM");
+        let p10 = document.getElementById("Nearest-Neighbors");
         let b1 = document.getElementById("first");
         let b2 = document.getElementById("second");
         let b3 = document.getElementById("third");
         let b4 = document.getElementById("fourth");
+        let b5 = document.getElementById("fifth");
+        let b6 = document.getElementById("sixth");
         firstStage();
 
         /* SCATTERPLOT CODE - YOU WILL NEED TO CHANGE THIS */
@@ -658,100 +663,115 @@
         function getID() {
             return event.srcElement.id;
         }
+        let p_prime = null;
+        let p_prime2 = "";
         function updateData(){
             var ID = getID();
             //console.log ("ID:" + ID);
             if (ID == "Nearest-Neighbors" || ID == "model-confusion-matrix-Nearest-Neighbors" ){
                 //backend deep copy of the element
                 let p = document.getElementById("Nearest-Neighbors");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Nearest Neighbors";
 
             }
             else if (ID == "Linear-SVM" || ID == "model-confusion-matrix-Linear-SVM" ){
                 let p = document.getElementById("Linear-SVM");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Linear SVM";
             }
             else if (ID == "RBF-SVM" || ID == "model-confusion-matrix-RBF-SVM" ){
                 let p = document.getElementById("RBF-SVM");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "RBF SVM";
             }
             else if (ID == "Gaussian-Process" || ID == "model-confusion-matrix-Gaussian-Process" ){
                 let p = document.getElementById("Gaussian-Process");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Gaussian Process";
             }
             else if (ID == "Decision-Tree" || ID == "model-confusion-matrix-Decision-Tree" ){
                 let p = document.getElementById("Decision-Tree");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Decision Tree";
             }
             else if (ID == "Random-Forest" || ID == "model-confusion-matrix-Random-Forest" ){
                 let p = document.getElementById("Random-Forest");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Random Forest";
             }
             else if (ID == "Neural-Net" || ID == "model-confusion-matrix-Neural-Net" ){
                 let p = document.getElementById("Neural-Net");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Neural Net";
             }
             else if (ID == "AdaBoost" || ID == "model-confusion-matrix-AdaBoost" ){
                 let p = document.getElementById("AdaBoost");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "AdaBoost";
             }
             else if (ID == "Naive-Bayes" || ID == "model-confusion-matrix-Naive-Bayes" ){
                 let p = document.getElementById("Naive-Bayes");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "Naive Bayes";
                 
             }
             else if (ID == "QDA" || ID == "model-confusion-matrix-QDA" ){
                 let p = document.getElementById("QDA");
-                let p_prime = p.cloneNode(true);
+                p_prime = p.cloneNode(true);
                 var comparison = document.getElementById("dataset-svg");
                 comparison.replaceWith(p_prime);
                 console.log(comparison.parentNode);
                 p_prime.id = "dataset-svg";
+                p_prime2 = "QDA";
             }
             
         }
 
         function firstStage() {
+            document.querySelector("h3").innerText = "";
             //resets data of parentNode "UL"
             removeSecond();
             removeThird();
             removeFourth();
+            //updates header
+            document.querySelector("h2").innerText = "Stage 1 of 4";
             //appends desired models to stage
             parentNode.appendChild(p);
             parentNode.appendChild(p2);
@@ -760,12 +780,16 @@
             b3.style.display = "none";
             b4.style.display = "none";
             b2.style.display = "block";
+            b5.style.display = "block";
+            b5.style.backgroundColor = "#c6d6e6";
+            b6.style.display = "none";
         }
         function secondStage() {
             //resets data of parentNode "UL"
             removeFirst();
             removeThird();
             removeFourth();
+            document.querySelector("h2").innerText = "Stage 2 of 4";
             //appends desired models to stage
             parentNode.appendChild(p4);
             parentNode.appendChild(p5);
@@ -776,12 +800,16 @@
             b3.style.backgroundColor = "#c6d6e6";
             b4.style.display = "none";
             b2.style.display = "none";
+            b5.style.display = "block";
+            b5.style.backgroundColor = "#c6d6e6";
+            b6.style.display = "none";
         }
         function thirdStage() {
             //resets data of parentNode "UL"
             removeSecond();
             removeFirst();
             removeFourth();
+            document.querySelector("h2").innerText = "Stage 3 of 4";
             //appends desired models to stage
             parentNode.appendChild(p6);
             parentNode.appendChild(p8);
@@ -792,19 +820,28 @@
             b4.style.backgroundColor = "#c6d6e6";
             b2.style.display = "block";
             b2.style.backgroundColor = "#c6d6e6";
+            b5.style.display = "block";
+            b5.style.backgroundColor = "#c6d6e6";
+            b6.style.display = "none";
+            
         }
         function fourthStage () {
             //resets data of parentNode "UL"
             removeFirst();
             removeSecond();
             removeThird();
+            document.querySelector("h2").innerText = "Stage 4 of 4";
             //appends desired models to stage
             parentNode.appendChild(p10);
             b1.style.display = "none";
             b3.style.display = "block";
+            b5.style.display = "block";
+            b5.style.backgroundColor = "#c6d6e6";
             b3.style.backgroundColor = "#c6d6e6";
             b4.style.display = "none";
             b2.style.display = "none";
+            b6.style.display = "block";
+            b6.style.backgroundColor = "#c6d6e6";
         }
         function removeFirst(){
             //removes first row
@@ -829,6 +866,26 @@
         function removeFourth() {
             // removes single elem in fourth row
             let p_prime10 = p10.remove();
+        }
+        function submitter() {
+            removeFirst();
+            removeSecond();
+            removeThird();
+            removeFourth();
+            b1.style.display = "none";
+            b2.style.display = "none";
+            b3.style.display = "none";
+            b4.style.display = "none";
+            b5.style.display = "none";
+            b6.style.display = "block";
+            b6.style.backgroundColor = "#c6d6e6";
+            if (p_prime2 == "") {
+                document.querySelector("h3").innerText = "You have not yet selected a treatment.";
+            }
+            else{
+                document.querySelector("h3").innerText = "You have selected " + p_prime2 + " as your treatment.";
+            }
+            document.querySelector("h2").innerText = "";
         }
 
 
