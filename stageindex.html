@@ -132,6 +132,7 @@
 	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
+    <h3></h3>
 	
 	
        <!-- The places where we can add click on models -->
@@ -771,7 +772,7 @@
             removeThird();
             removeFourth();
             //updates header
-            document.querySelector("h2").innerText = "Stage 1 of 4";
+            document.querySelector("h3").innerText = "Stage 1 of 4";
             //appends desired models to stage
             parentNode.appendChild(p);
             parentNode.appendChild(p2);
@@ -789,7 +790,7 @@
             removeFirst();
             removeThird();
             removeFourth();
-            document.querySelector("h2").innerText = "Stage 2 of 4";
+            document.querySelector("h3").innerText = "Stage 2 of 4";
             //appends desired models to stage
             parentNode.appendChild(p4);
             parentNode.appendChild(p5);
@@ -809,7 +810,7 @@
             removeSecond();
             removeFirst();
             removeFourth();
-            document.querySelector("h2").innerText = "Stage 3 of 4";
+            document.querySelector("h3").innerText = "Stage 3 of 4";
             //appends desired models to stage
             parentNode.appendChild(p6);
             parentNode.appendChild(p8);
@@ -830,7 +831,7 @@
             removeFirst();
             removeSecond();
             removeThird();
-            document.querySelector("h2").innerText = "Stage 4 of 4";
+            document.querySelector("h3").innerText = "Stage 4 of 4";
             //appends desired models to stage
             parentNode.appendChild(p10);
             b1.style.display = "none";
@@ -885,7 +886,7 @@
             else{
                 document.querySelector("h3").innerText = "You have selected " + p_prime2 + " as your treatment.";
             }
-            document.querySelector("h2").innerText = "";
+            document.querySelector("h3").innerText = "";
         }
 
 
