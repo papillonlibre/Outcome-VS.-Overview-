@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-	<h1><center>HamletEye: Welcome to Model Selection (Overview First)</center></h1>
+	<h1><center>HamletEye's introduction and instruction Page</center></h1>
         
         <style>
     .axis {
@@ -90,7 +90,7 @@
 
 <style>
         head {
-            background-color: black;
+            background-color: orange;
             color: white;
             text-align: center;
             padding: 5px;
@@ -114,13 +114,23 @@
 <body>
 
 	<div><center>
-	<h2>Please select the Model Selection Methods below</h2>
+	<h3>In HamletEye, we provided 3 Model Selection Methods below.</h3>
 	<link rel="stylesheet" href="index.css">
-	<a href="index.html" title="Index demo"><button class="big-button">Overview First</button></a>
+	<a href="index.html" title="Instruction "><button class="big-button">Instructions</button></a>
+	<a href="overviewindex.html" title="Overview First"><button class="big-button">Overview First</button></a>
 	<a href="outcomeindex.html" title="Outcome First"><button class="big-button">Outcome First</button></a>
 	<a href="stageindex.html" title="Stage First"><button class="big-button">Stage First</button></a>
 	
+	<h4>HamletEye is inspired by Ben Shneiderman's visual information-seeking mantra: "overview first, zoom and filter, then details on demand." </h4>
+	
 	</center></div>
+	
+	<div> 
+	<p>- Overview-first is the traditional framework following Ben's mantra. It simply displays all models and details. </p>
+	<p>- Building on the overview-first framework, we reverse the mantra and create an outcome-first framework. This framework starts from details comparisons and reduces the comparison time from n-to-n to 1-to-n.</p>
+	<p>- Stage-first is another innovative framework based on outcome-first framework. Stage-first divides all the model selections into different stages. 
+	Users can be more efficient to compare the models from 1-to-n to 1-to-k (while k is a constant number and k less than n).</p>
+	</div>
 	
     <div class='container'>
         <div class='dataset-container'>
@@ -146,7 +156,7 @@
             <div class='dataset-description-container'>
                 <p>The City of Somerville sends out <a href='https://data.somervillema.gov/Happiness/Somerville-Happiness-Survey-responses-2011-2013-20/w898-3dfm'>a happiness survey</a> to a random sample of Somerville residents asking them to rate their personal happiness and their satisfaction with City services. This combined dataset includes the survey responses from 2011, 2013, and 2015.</p>
 
-                <p> The dataset for this lab is a <a href='https://archive.ics.uci.edu/ml/datasets/Somerville+Happiness+Survey'>subset of the happiness survey</a> with six features, "the availability of info about city services," "cost of housing," "quality of public schools," "trust in local police," "maintenance of streets and sidewalks", and "availability of social and community events".  Each feature is rated from 1 to 5, and each data point is labeled with 1 (happy) or 0 (unhappy). 
+                <p> The dataset is a <a href='https://archive.ics.uci.edu/ml/datasets/Somerville+Happiness+Survey'>subset of the happiness survey</a> with six features, "the availability of info about city services," "cost of housing," "quality of public schools," "trust in local police," "maintenance of streets and sidewalks", and "availability of social and community events".  Each feature is rated from 1 to 5, and each data point is labeled with 1 (happy) or 0 (unhappy). 
             </div>
         </div>
         <div class='models-container'>
@@ -642,4 +652,12 @@
     </script>
 </body>
 
+
+<footer>
+<div>
+	<h3>This project is sponsered by Tufts University, by Yuexing Hao and Vanessa Bellotti.</h3>
+	<h4>If you have any questions or suggestions on this project, please email to yhao02@tufts.edu.  </h4>
+	
+</div>
+</footer>
 </html>
